@@ -3,6 +3,8 @@ package com.monopatinmicroservicio.service;
 import com.monopatinmicroservicio.model.Monopatin;
 import com.monopatinmicroservicio.model.MonopatinViaje;
 import com.monopatinmicroservicio.model.Viaje;
+import com.monopatinmicroservicio.repository.MonopatinRepository;
+import com.monopatinmicroservicio.repository.MonopatinViajeRepository;
 import com.monopatinmicroservicio.repository.ViajeRepository;
 import com.monopatinmicroservicio.service.DTO.ViajeDTORequest;
 import com.monopatinmicroservicio.service.DTO.ViajeDTOResponse;
@@ -22,13 +24,14 @@ import java.util.Optional;
 public class ViajeService {
     private WebClient webClient;
     private ViajeRepository repository;
+    private MonopatinRepository monopatinRepository;
+
+    private MonopatinViajeRepository monopatinViajeRepository;
 
     public ViajeService(WebClient.Builder webClientBuilder, ViajeRepository viajeRepository) {
         this.webClient = webClientBuilder.baseUrl("http://localhost:55255/viaje").build();
         this.repository = viajeRepository;
     }
-
-
 
     public ResponseEntity<?> getViaje(Long id) {
         Optional<Viaje> optionalViaje = this.repository.findById(id);
@@ -41,38 +44,35 @@ public class ViajeService {
 
 
     //TODO: manejar excepciones y codigo de respuesta
-    //seria como matricularEstudiante. bala. Vamos a tener que hacer un controller de viajemonopatin
     public ResponseEntity<?> startViaje(ViajeDTORequest viaje) {
         // Creo un HttpHeaders para configurar las cabeceras de la solicitud
         // y le digo que nos vamos a comunicar mediante JSON
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        //
+        //inicio el saldo en null para poder usarlo en el subscribe
+        Double saldoUsuario = null;
+
+        //pido el saldo del usuario
         Mono<Double> saldo = this.webClient.get()
                 .uri("/medioDePago/saldo/{id}", viaje.getId_usuario())
                 .retrieve()// Enviar la solicitud GET y recibir la respuesta como un Mono
-                .bodyToMono(Double.class);
+                .bodyToMono(Double.class).subscribe(saldoRequest ->{
+                         saldoUsuario = saldoRequest;
+                }
+        );
 
-        saldo.subscribe()
-        if (saldo.block() < 0) {return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No tiene saldo suficiente");}
+        if (saldoUsuario < 0) {return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No tiene saldo suficiente");}
 
-        //
-        Mono<Monopatin> monopatin = this.webClient.get()
-                .uri("/monopatin/{id}", viaje.getId_monopatin())
-                .retrieve()
-                .bodyToMono(Monopatin.class);
+        //pido el monopatin
+        Monopatin monopatin = this.monopatinRepository.findById(viaje.getId_monopatin()).get();
 
-        Monopatin monopatinNuevo = null;
-        //cuando llega el monopatin, lo guardo en la variable monopatinNuevo
-        monopatin.subscribe(monopatinRequest -> {monopatinNuevo = monopatinRequest;} );
-
-        if (!monopatinNuevo.isDisponible()) {
+        if (!monopatin.isDisponible()) {
             //se podria usar codigo de respuesta 409 conflict
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El monopatin esta ocupado");
         }
         Viaje viajeNuevo = new Viaje(LocalDateTime.now(), null, 0.0, false, 0L, viaje.getId_monopatin());
-        MonopatinViaje monopatinViaje = new MonopatinViaje(viajeNuevo, monopatinNuevo);
+        MonopatinViaje monopatinViaje = new MonopatinViaje(viajeNuevo, monopatin);
 
         return new ResponseEntity(this.repository.save(viajeNuevo), HttpStatus.CREATED);
     }

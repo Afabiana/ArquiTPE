@@ -44,4 +44,9 @@ public class UsuarioController {
         return usuarioService.saveUsuario(usuario);
     }
 
+    @GetMapping("/saldo={usuario_id}")
+    public void getSaldo(Long id){
+        usuarioService.getSaldo(id);
+    }
+
 }

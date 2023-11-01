@@ -1,5 +1,6 @@
 package com.usuariomicroservicio.service;
 
+import com.usuariomicroservicio.repository.UsuarioCuentaRepository;
 import com.usuariomicroservicio.repository.UsuarioRepository;
 import com.usuariomicroservicio.model.Usuario;
 import com.usuariomicroservicio.service.DTO.UsuarioDTORequest;
@@ -14,9 +15,11 @@ import java.util.stream.Stream;
 @Service("UsuarioService")
 public class UsuarioService {
     private UsuarioRepository repository;
+    private UsuarioCuentaRepository usuarioCuentaRepository;
 
-    public UsuarioService(UsuarioRepository repository) {
+    public UsuarioService(UsuarioRepository repository, UsuarioCuentaRepository usuarioCuentaRepository) {
         this.repository = repository;
+        this.usuarioCuentaRepository = usuarioCuentaRepository;
     }
 
     public ResponseEntity<UsuarioDTOResponse> getUsuario(Long id) {
@@ -51,4 +54,11 @@ public class UsuarioService {
     }
 
 
+    public ResponseEntity<?> getSaldo(Long id) {
+        Optional<Usuario> optionalUsuario = repository.findById(id);
+        if (optionalUsuario.isPresent()) {
+            return new ResponseEntity<>(usuarioCuentaRepository.getSaldoByUserId(id), HttpStatus.OK);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró el usuario con el ID proporcionado");
+    }
 }

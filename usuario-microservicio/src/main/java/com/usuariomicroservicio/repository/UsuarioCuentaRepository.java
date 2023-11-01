@@ -13,8 +13,7 @@ public interface UsuarioCuentaRepository extends JpaRepository<UsuarioCuenta, Lo
             JOIN
                 uc.id.cuenta c
             WHERE
-                 c.saldo = :saldo
+                uc.id.usuario.id_usuario = :id
         """)
-    Double getSaldoById(Long id);
-
+    Double getSaldoByUserId(Long id);
 }
