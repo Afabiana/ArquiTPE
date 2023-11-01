@@ -19,7 +19,7 @@ public class Viaje {
     @Column
     private Boolean finalizado;
     private Long id_usuario; //necesito al menos una referencia para ir validando
-
+    private Double costoTotal; //cuando viaje finalice voy a setear el costo total
     public Viaje() {
     }
 
@@ -31,6 +31,7 @@ public class Viaje {
         this.finalizado = finalizado;
         this.segundosEstacionado = segundosEstacionado;
         this.id_usuario = id_usuario;
+        this.costoTotal = 0.0;
     }
 
     public Long getId_viaje() {

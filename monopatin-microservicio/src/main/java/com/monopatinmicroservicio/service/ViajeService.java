@@ -25,7 +25,6 @@ public class ViajeService {
     private WebClient webClient;
     private ViajeRepository repository;
     private MonopatinRepository monopatinRepository;
-
     private MonopatinViajeRepository monopatinViajeRepository;
 
     public ViajeService(WebClient.Builder webClientBuilder, ViajeRepository viajeRepository) {
@@ -45,24 +44,18 @@ public class ViajeService {
 
     //TODO: manejar excepciones y codigo de respuesta
     public ResponseEntity<?> startViaje(ViajeDTORequest viaje) {
-        // Creo un HttpHeaders para configurar las cabeceras de la solicitud
-        // y le digo que nos vamos a comunicar mediante JSON
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
         //inicio el saldo en null para poder usarlo en el subscribe
-        Double saldoUsuario = null;
+        Double saldoUsuario = 0.0;
 
         //pido el saldo del usuario
         Mono<Double> saldo = this.webClient.get()
                 .uri("/medioDePago/saldo/{id}", viaje.getId_usuario())
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE) // Agrega el encabezado de tipo de contenido JSON
                 .retrieve()// Enviar la solicitud GET y recibir la respuesta como un Mono
-                .bodyToMono(Double.class).subscribe(saldoRequest ->{
-                         saldoUsuario = saldoRequest;
-                }
-        );
+                .bodyToMono(Double.class);
+        saldoUsuario = saldo.block();
 
-        if (saldoUsuario < 0) {return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No tiene saldo suficiente");}
+        if (saldoUsuario <= 0) {return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No tiene saldo suficiente");}
 
         //pido el monopatin
         Monopatin monopatin = this.monopatinRepository.findById(viaje.getId_monopatin()).get();
@@ -74,6 +67,6 @@ public class ViajeService {
         Viaje viajeNuevo = new Viaje(LocalDateTime.now(), null, 0.0, false, 0L, viaje.getId_monopatin());
         MonopatinViaje monopatinViaje = new MonopatinViaje(viajeNuevo, monopatin);
 
-        return new ResponseEntity(this.repository.save(viajeNuevo), HttpStatus.CREATED);
+        return new ResponseEntity(this.monopatinViajeRepository.save(monopatinViaje), HttpStatus.CREATED);
     }
 }

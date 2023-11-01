@@ -50,9 +50,10 @@ public class MonopatinController {
         return monopatinService.saveMonopatin(monopatin);
     }
 
-    //buscar monopatines disponibles
-    //buscar monopatines por ubicacion
-    //podria hacer un search generico para buscar por cualquier atributo
+    //tiempo de uso y los kilómetros recorridos
+    //tiempo con pausas y sin pausas. habria que hacer un sum de los tiempos de viaje etcetc
+    //monopatines cercanos a mi zona, esto seria algo como si la diferencia de long y lat es menor a tanto = cerca
+    //buscar monopatines por ubicacion (long y lat)
     //buscar monopatines que necesiten mantenimiento
     //buscar por tiempo de uso
 }
