@@ -1,8 +1,8 @@
-package com.administracionmicroservicio.service;
+package com.monopatinmicroservicio.service;
 
-import com.administracionmicroservicio.model.Tarifa;
-import com.administracionmicroservicio.repository.TarifaRepository;
-import com.administracionmicroservicio.service.DTO.TarifaDTORequest;
+import com.monopatinmicroservicio.service.DTO.TarifaDTORequest;
+import com.monopatinmicroservicio.model.Tarifa;
+import com.monopatinmicroservicio.repository.TarifaRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 

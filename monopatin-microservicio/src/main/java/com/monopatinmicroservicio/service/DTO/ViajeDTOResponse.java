@@ -6,14 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ViajeDTOResponse implements Serializable {
-    private Timestamp hora_inicio;
-    private Timestamp hora_fin;
+    private LocalDateTime hora_inicio;
+    private LocalDateTime hora_fin;
     private Double kms;
     private Long id_usuario;
     public ViajeDTOResponse(Viaje viaje) {

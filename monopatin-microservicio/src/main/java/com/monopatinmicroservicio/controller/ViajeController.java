@@ -3,10 +3,7 @@ package com.monopatinmicroservicio.controller;
 import com.monopatinmicroservicio.service.DTO.ViajeDTORequest;
 import com.monopatinmicroservicio.service.ViajeService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController("ViajeController")
 @RequestMapping("/viaje")
@@ -28,5 +25,10 @@ public class ViajeController {
         return viajeService.startViaje(viaje);
     }
 
+    @GetMapping("/totalFacturado?anio={anio}&mesDesde={mesDesde}&mesHasta={mesHasta}")
+    public ResponseEntity<?> getTotalFacturado(@PathVariable int anio, @PathVariable int mesDesde,
+                                               @PathVariable int mesHasta) {
+        return viajeService.getTotalFacturado(anio, mesDesde, mesHasta);
+    }
 
 }

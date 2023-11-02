@@ -1,9 +1,9 @@
-package com.administracionmicroservicio.controller;
+package com.monopatinmicroservicio.controller;
 
-import com.administracionmicroservicio.service.DTO.TarifaDTORequest;
-import com.administracionmicroservicio.service.TarifaService;
+import com.monopatinmicroservicio.service.TarifaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.monopatinmicroservicio.service.DTO.TarifaDTORequest;
 
 @RestController
 public class TarifaController {

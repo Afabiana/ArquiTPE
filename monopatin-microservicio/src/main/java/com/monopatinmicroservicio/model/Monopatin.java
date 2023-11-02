@@ -17,15 +17,17 @@ public class Monopatin {
     private Ubicacion ubicacion;
     @Column
     private Boolean disponibilidad; //este flag me va a ayudar a saber si esta estacionado
-
+    private Boolean mantenimiento; //este flag no es lo mismo que disponibilidad
     public Monopatin(Ubicacion ubicacion, boolean disponibilidad) {
         this.ubicacion = ubicacion;
         this.disponibilidad = disponibilidad;
+        this.mantenimiento = false;
     }
 
     public Monopatin(MonopatinDTO monopatin) {
         this.ubicacion = new Ubicacion(monopatin.getLatitud(), monopatin.getLongitud());
         this.disponibilidad = monopatin.getDisponibilidad();
+        this.mantenimiento = monopatin.getMantenimiento();
     }
 
     public Monopatin() {

@@ -69,4 +69,8 @@ public class ViajeService {
 
         return new ResponseEntity(this.monopatinViajeRepository.save(monopatinViaje), HttpStatus.CREATED);
     }
+
+    public ResponseEntity<?> getTotalFacturado(int anio, int mesDesde, int mesHasta) {
+        this.repository.getTotalFacturado(anio, mesDesde, mesHasta);
+    }
 }

@@ -1,6 +1,6 @@
-package com.administracionmicroservicio.repository;
+package com.monopatinmicroservicio.repository;
 
-import com.administracionmicroservicio.model.Tarifa;
+import com.monopatinmicroservicio.model.Tarifa;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TarifaRepository extends JpaRepository<Tarifa, Long> {

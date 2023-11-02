@@ -16,6 +16,7 @@ public class MonopatinDTO implements Serializable {
     double latitud;
     double longitud;
     private Boolean disponibilidad;
+    private Boolean mantenimiento;
 
     public MonopatinDTO(Monopatin m){
         this.id_monopatin = m.getId_monopatin();
@@ -23,4 +24,5 @@ public class MonopatinDTO implements Serializable {
         this.longitud = m.getUbicacion().getLongitud();
         this.disponibilidad = m.isDisponible();
     }
+
 }

@@ -50,6 +50,16 @@ public class MonopatinController {
         return monopatinService.saveMonopatin(monopatin);
     }
 
+    @GetMapping("/monopatinesMasUsados/minCantidadViajes={minCantidadViajes}&anio={anio}")
+    public ResponseEntity<?> getMonopatinesMasUsados(@PathVariable int minCantidadViajes, @PathVariable int anio) {
+        return monopatinService.getMonopatinesMasUsados(minCantidadViajes, anio);
+    }
+
+    @GetMapping("/reporteEstadoMonopatines")
+    public ResponseEntity<?> getReporteEstadoMonopatines() {
+        return monopatinService.getReporteEstadoMonopatines();
+    }
+
     //tiempo de uso y los kilómetros recorridos
     //tiempo con pausas y sin pausas. habria que hacer un sum de los tiempos de viaje etcetc
     //monopatines cercanos a mi zona, esto seria algo como si la diferencia de long y lat es menor a tanto = cerca

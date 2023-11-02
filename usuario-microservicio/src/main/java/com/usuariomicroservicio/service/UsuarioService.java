@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-@Service("UsuarioService")
+@Service
 public class UsuarioService {
     private UsuarioRepository repository;
     private UsuarioCuentaRepository usuarioCuentaRepository;

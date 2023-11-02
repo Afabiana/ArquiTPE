@@ -6,6 +6,5 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
-    @Query("SELECT u.saldo FROM Usuario u JOIN WHERE u.id_usuario = ?1")
-    Double getSaldoById(Long id);
+
 }
