@@ -15,6 +15,8 @@ public class Usuario {
     private String nro_celular;
     private String email;
     private Boolean habilitada;
+    @ManyToMany
+    private List<Rol> roles;
 
     public Usuario() {
     }

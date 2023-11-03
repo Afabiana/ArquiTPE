@@ -16,10 +16,11 @@ public interface ViajeRepository extends JpaRepository<Viaje, Long> {
         FROM
             Viaje v
         WHERE
-            EXTRACT(month from v.hora_fin) BETWEEN :fechaDesde AND :fechaHasta
+            EXTRACT(month from v.hora_fin) BETWEEN :mesDesde AND :mesHasta
             AND EXTRACT(year from v.hora_fin) = :anio
         """)
     //podria hacer un DTO para que devuelva el nombre del mes y el total facturado
-    Double getTotalFacturado(int anio, int mesDesde, int mesHasta);
+    Double traerTotalFacturado(int anio, int mesDesde, int mesHasta);
+
 
 }

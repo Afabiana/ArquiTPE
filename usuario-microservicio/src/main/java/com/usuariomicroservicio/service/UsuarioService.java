@@ -22,27 +22,27 @@ public class UsuarioService {
         this.usuarioCuentaRepository = usuarioCuentaRepository;
     }
 
-    public ResponseEntity<UsuarioDTOResponse> getUsuario(Long id) {
+    public ResponseEntity<UsuarioDTOResponse> traerUsuario(Long id) {
         return ResponseEntity.ok(repository.findById(id)
                 .map(UsuarioDTOResponse::new)
                 .orElse(null));
     }
 
-    public ResponseEntity<Stream<UsuarioDTOResponse>> getAll() {
+    public ResponseEntity<Stream<UsuarioDTOResponse>> traerTodo() {
         return ResponseEntity.ok(repository.findAll().stream().map(UsuarioDTOResponse::new));
     }
 
     //aca si dejamos que devuelva el usuario para que se vea si todos los atributos estan bien
-    public ResponseEntity<?> saveUsuario(UsuarioDTORequest usuario) {
+    public ResponseEntity<?> guardarUsuario(UsuarioDTORequest usuario) {
         return new ResponseEntity<>(repository.save(new Usuario(usuario)), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<?> deleteUsuario(Long id) {
+    public ResponseEntity<?> eliminarUsuario(Long id) {
         repository.deleteById(id);
         return ResponseEntity.ok("se elimino con exito");
     }
 
-    public ResponseEntity<?> disableCuenta(Long id, boolean isHabilitada) {
+    public ResponseEntity<?> cambiarEstadoCuenta(Long id, boolean isHabilitada) {
         Optional<Usuario> optionalUsuario = repository.findById(id);
         if (optionalUsuario.isPresent()) {
             Usuario usuario = optionalUsuario.get();
@@ -54,7 +54,7 @@ public class UsuarioService {
     }
 
 
-    public ResponseEntity<?> getSaldo(Long id) {
+    public ResponseEntity<?> traerSaldo(Long id) {
         Optional<Usuario> optionalUsuario = repository.findById(id);
         if (optionalUsuario.isPresent()) {
             return new ResponseEntity<>(usuarioCuentaRepository.getSaldoByUserId(id), HttpStatus.OK);

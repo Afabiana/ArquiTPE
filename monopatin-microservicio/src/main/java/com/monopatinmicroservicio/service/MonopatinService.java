@@ -1,12 +1,11 @@
 package com.monopatinmicroservicio.service;
 
-import com.monopatinmicroservicio.model.Monopatin;
-import com.monopatinmicroservicio.model.Ubicacion;
+import com.monopatinmicroservicio.model.*;
+import com.monopatinmicroservicio.repository.EstacionRepository;
 import com.monopatinmicroservicio.repository.MonopatinRepository;
 import com.monopatinmicroservicio.repository.MonopatinViajeRepository;
-import com.monopatinmicroservicio.service.DTO.MonopatinDTO;
-import com.monopatinmicroservicio.service.DTO.MonopatinMasUsadoDTO;
-import com.monopatinmicroservicio.service.DTO.ReporteEstadoMonopatinesDTO;
+import com.monopatinmicroservicio.repository.TarifaRepository;
+import com.monopatinmicroservicio.service.DTO.*;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +19,7 @@ import java.util.stream.Stream;
 public class MonopatinService {
 
     private MonopatinRepository repository;
+    private EstacionRepository estacionRepository;
     private MonopatinViajeRepository monopatinViajeRepository;
 
     public MonopatinService(MonopatinRepository repository) {
@@ -28,79 +28,115 @@ public class MonopatinService {
     }
 
     @Transactional
-    public Optional<MonopatinDTO> getMonopatin(Long id){
+    public Optional<MonopatinDTO> traerMonopatin(Long id){
         Optional<Monopatin> monopatin = repository.findById(id);
         if (monopatin.isPresent()){
             return monopatin.map(MonopatinDTO::new);
         }
         return null;
-        /* return ResponseEntity.ok(repository.findById(id)
-                .map(MonopatinDTO::new)
-                .orElse(null));
-         */
-    }
-    @Transactional
-    public ResponseEntity<Stream<MonopatinDTO>> getMonopatines() {
-        return ResponseEntity.ok(repository.findAll().stream().map(MonopatinDTO::new));
-    }
-    @Transactional
-    public ResponseEntity<?> deleteMonopatin(Long id) {
-        repository.deleteById(id);
-        return ResponseEntity.ok("se elimino con exito");
     }
 
     @Transactional
-    public ResponseEntity<?> updateDisponibilidad(Long id, boolean disponible){
-        Optional<Monopatin> optionalMonopatin = repository.findById(id);
-        if(optionalMonopatin.isPresent()){
-            Monopatin monopatin = optionalMonopatin.get();
+    public boolean eliminarMonopatin(Long id) {
+        if (repository.existsById(id)){
+            repository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    @Transactional
+    public boolean cambiarDisponibilidad(Long id, boolean disponible) {
+        Monopatin monopatin = repository.findById(id).orElse(null);
+
+        if (monopatin != null) {
             monopatin.setDisponibilidad(disponible);
             repository.save(monopatin);
-            return ResponseEntity.ok().body("Se modifico con exito");
+            return true;
+        } else {
+            return false;
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró el monopatín con el ID proporcionado");
     }
 
     @Transactional
-    public ResponseEntity<?> updateUbicacion(Long id, Ubicacion ubicacion) {
+    public boolean actualizarUbicacion(Long id, Ubicacion ubicacion) {
         Optional<Monopatin> optionalMonopatin = repository.findById(id);
         if (optionalMonopatin.isPresent()) {
             Monopatin monopatin = optionalMonopatin.get();
             monopatin.setUbicacion(ubicacion);
-            return ResponseEntity.ok(repository.save(monopatin));
+            repository.save(monopatin);
+            return true;
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró el monopatín con el ID proporcionado");
+        return false;
     }
 
     @Transactional
-    public ResponseEntity<MonopatinDTO> saveMonopatin(MonopatinDTO monopatin){
+    public MonopatinDTO agregarMonopatin(MonopatinDTO monopatin){
         Monopatin savedMonopatin = repository.save(new Monopatin(monopatin));
-        MonopatinDTO savedMonopatinDTO = new MonopatinDTO(savedMonopatin);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedMonopatinDTO);
+        return new MonopatinDTO(savedMonopatin);
+    }
+
+    @Transactional
+    public Stream<MonopatinDTO> traerMonopatines() {
+        return repository.findAll().stream().map(MonopatinDTO::new);
+    }
+
+    @Transactional
+    public List<MonopatinDTO> traerMonopatinesCercanos(double latitud, double longitud, double limite) {
+        List<MonopatinDTO> monopatines = repository.traerMonopatinesCercanos(latitud, longitud, limite * 1000)
+                .stream()
+                .map(MonopatinDTO::new)
+                .toList();
+        return monopatines;
     }
 
 
-    public ResponseEntity<?> getMonopatinesMasUsados(int minCantidadViajes, int anio) {
-        List<Object[]> resultado = this.monopatinViajeRepository.getMonopatinesMasUsados(minCantidadViajes, anio);
+    @Transactional
+    public Optional<List<MonopatinMasUsadoDTO>> traerMonopatinesMasUsados(int minCantidadViajes, int anio) {
+        List<MonopatinMasUsadoDTO> masUsados = this.monopatinViajeRepository.traerMonopatinesMasUsados(minCantidadViajes, anio);
 
-        if (resultado.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron monopatines con la cantidad de viajes mínima especificada");
+        if (!masUsados.isEmpty()) {
+            return Optional.of(masUsados);
         }
 
-        List<MonopatinMasUsadoDTO> masUsados = resultado.stream().map(m ->{
-            Long monopatinId = (Long) m[0];
-            int cantidad = (int) m[1];
-            return new MonopatinMasUsadoDTO(monopatinId, cantidad);
-        }).toList();
-
-        return ResponseEntity.ok(masUsados);
+        return Optional.empty();
     }
 
-    public ResponseEntity<?> getReporteEstadoMonopatines() {
-        return ResponseEntity.ok(repository.getReporteEstadoMonopatines().stream().map(m -> {
-            int cantEnMantenimeinto = (int) m[0];
-            int cantDisponibles = (int) m[1];
-            return new ReporteEstadoMonopatinesDTO(cantEnMantenimeinto, cantDisponibles);
-        }).toList());
+
+    @Transactional
+    public List<ReporteEstadoMonopatinesDTO> traerReporteEstadoMonopatines() {
+        return repository.traerReporteEstadoMonopatines();
+    }
+
+    @Transactional
+    public EstacionDTO guardarEstacion(Ubicacion ubicacion) {
+        Estacion estacion = new Estacion(ubicacion);
+        return new EstacionDTO(estacionRepository.save(estacion));
+    }
+
+    @Transactional
+    public boolean eliminarEstacion(Long id) {
+        Optional<Estacion> optionalEstacion = estacionRepository.findById(id);
+        if (optionalEstacion.isPresent()) {
+            Estacion estacion = optionalEstacion.get();
+            estacionRepository.delete(estacion);
+            return true;
+        }
+        return false;
+    }
+
+    @Transactional
+    public List<ReporteKilometrajeDTO> traerReporteKilometrajeConPausas() {
+        return monopatinViajeRepository.traerReporteKilometrajeConPausas();
+    }
+
+    @Transactional
+    public List<ReporteKilometrajeDTO> traerReporteKilometrajeSinPausas() {
+        return monopatinViajeRepository.traerReporteKilometrajeSinPausas();
+    }
+
+    @Transactional
+    public List<EstacionDTO> traerEstacionesMasCercanas(double latitud, double longitud) {
+        return estacionRepository.traerEstacionesMasCercanas(latitud, longitud);
     }
 }

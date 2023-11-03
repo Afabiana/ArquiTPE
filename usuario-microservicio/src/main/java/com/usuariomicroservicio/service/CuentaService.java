@@ -28,49 +28,42 @@ public class CuentaService {
         return this.repository.findAll().stream().map(CuentaDTOResponse::new);
     }
 
-    public CuentaDTOResponse getById(Long id) {
+    public CuentaDTOResponse traerPorId(Long id) {
         Optional<Cuenta> optionalCuenta = repository.findById(id);
         if (optionalCuenta.isPresent()) {
             CuentaDTOResponse cuentaDTOResponse = new CuentaDTOResponse(optionalCuenta.get());
             return cuentaDTOResponse;
-            //return new ResponseEntity<>(cuentaDTOResponse, HttpStatus.OK);
         }
-        //return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró la cuenta con el ID proporcionado");
         return null;
     }
 
-    public Cuenta saveCuenta(CuentaDTORequest cuenta) {
-        return (this.repository.save(new Cuenta(cuenta)));
-        //return new ResponseEntity<>(repository.save(new Cuenta(cuenta)), HttpStatus.CREATED);
+    public CuentaDTOResponse agregarCuenta(CuentaDTORequest cuenta) {
+        return (new CuentaDTOResponse(this.repository.save(new Cuenta(cuenta))));
     }
 
-    // public ResponseEntity<?> deleteCuenta(Long id) {
-    //    repository.deleteById(id);
-    //    return ResponseEntity.ok("se elimino con exito");
-    // }
-
-    public Long deleteCuenta(Long id) {
+    public Long eliminarCuenta(Long id) {
         repository.deleteById(id);
         return id;
     }
 
-    public ResponseEntity<?> topUpSaldo(Long id, double monto) {
+    public Double cargarSaldo(Long id, double monto) {
         Optional<Cuenta> optionalCuenta = repository.findById(id);
         if (optionalCuenta.isPresent()) {
             Cuenta cuenta = optionalCuenta.get();
             cuenta.setSaldo(cuenta.getSaldo() + monto);
-            return new ResponseEntity<> (repository.save(cuenta), HttpStatus.OK);
+            return cuenta.getSaldo();
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró la cuenta con el ID proporcionado");
+        return null;
     }
 
-    public ResponseEntity<?> chargeTarifa(Long id, double monto) {
+    public Double cobrarTarifa(Long id, double monto) {
         Optional<Cuenta> optionalCuenta = repository.findById(id);
         if (optionalCuenta.isPresent()) {
             Cuenta cuenta = optionalCuenta.get();
             cuenta.setSaldo(cuenta.getSaldo() - monto);
-            return new ResponseEntity<> (repository.save(cuenta), HttpStatus.OK);
+            repository.save(cuenta);
+            return cuenta.getSaldo();
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró la cuenta con el ID proporcionado");
+        return null;
     }
 }

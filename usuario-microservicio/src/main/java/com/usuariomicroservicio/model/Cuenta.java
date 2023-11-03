@@ -3,8 +3,6 @@ package com.usuariomicroservicio.model;
 import com.usuariomicroservicio.service.DTO.CuentaDTORequest;
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
-
 @Entity
 public class Cuenta {
     @Id

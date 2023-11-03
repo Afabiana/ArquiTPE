@@ -15,38 +15,38 @@ public class UsuarioController {
     }
 
     @PutMapping("/habilitar/{id}")
-    public ResponseEntity<?> disableCuenta(@PathVariable Long id) {
-        return usuarioService.disableCuenta(id, true);
+    public ResponseEntity<?> habilitarCuenta(@PathVariable Long id) {
+        return usuarioService.cambiarEstadoCuenta(id, true);
     }
 
     @PutMapping("/deshabilitar/{id}")
-    public ResponseEntity<?> enableCuenta(@PathVariable Long id) {
-        return usuarioService.disableCuenta(id, false);
+    public ResponseEntity<?> deshabilitarCuenta(@PathVariable Long id) {
+        return usuarioService.cambiarEstadoCuenta(id, false);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUsuario(@PathVariable Long id) {
-        return usuarioService.getUsuario(id);
+    public ResponseEntity<?> traerUsuario(@PathVariable Long id) {
+        return usuarioService.traerUsuario(id);
     }
 
     @GetMapping("")
-    public ResponseEntity<?> getUsuarios() {
-        return usuarioService.getAll();
+    public ResponseEntity<?> traerUsuarios() {
+        return usuarioService.traerTodo();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUsuario(@PathVariable Long id) {
-        return usuarioService.deleteUsuario(id);
+    public ResponseEntity<?> eliminarUsuario(@PathVariable Long id) {
+        return usuarioService.eliminarUsuario(id);
     }
 
     @PostMapping("")
-    public ResponseEntity<?> addUsuario(@RequestBody UsuarioDTORequest usuario) {
-        return usuarioService.saveUsuario(usuario);
+    public ResponseEntity<?> agregarUsuario(@RequestBody UsuarioDTORequest usuario) {
+        return usuarioService.guardarUsuario(usuario);
     }
 
     @GetMapping("/saldo={usuario_id}")
-    public void getSaldo(Long id){
-        usuarioService.getSaldo(id);
+    public void traerSaldo(Long id){
+        usuarioService.traerSaldo(id);
     }
 
 }

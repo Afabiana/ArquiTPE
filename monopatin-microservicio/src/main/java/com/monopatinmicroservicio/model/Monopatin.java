@@ -10,24 +10,21 @@ public class Monopatin {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id_monopatin;
-
     //seguramente haya ubicaciones repetidas peeero...
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL) //cascade para que inserte ubicacion tambien
     @JoinColumn(name = "ubicacion_id")
     private Ubicacion ubicacion;
     @Column
     private Boolean disponibilidad; //este flag me va a ayudar a saber si esta estacionado
-    private Boolean mantenimiento; //este flag no es lo mismo que disponibilidad
+
     public Monopatin(Ubicacion ubicacion, boolean disponibilidad) {
         this.ubicacion = ubicacion;
         this.disponibilidad = disponibilidad;
-        this.mantenimiento = false;
     }
 
     public Monopatin(MonopatinDTO monopatin) {
         this.ubicacion = new Ubicacion(monopatin.getLatitud(), monopatin.getLongitud());
         this.disponibilidad = monopatin.getDisponibilidad();
-        this.mantenimiento = monopatin.getMantenimiento();
     }
 
     public Monopatin() {
@@ -51,5 +48,9 @@ public class Monopatin {
 
     public void setDisponibilidad (boolean disponible) {
         this.disponibilidad = disponible;
+    }
+
+    public boolean estaEstacionado(Ubicacion ubi){
+        return this.ubicacion.equals(ubi);
     }
 }

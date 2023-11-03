@@ -11,5 +11,5 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class MonopatinMasUsadoDTO implements Serializable {
     private Long id_monopatin;
-    private int cantidadViajes;
+    private long cantidadViajes;
 }

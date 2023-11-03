@@ -1,27 +1,33 @@
 package com.monopatinmicroservicio.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
-
 @Entity
-public class Estacion implements Serializable {
-    //si las ubicaciones no son unicas voy a tener que hacer un join y comparar long y lat
+public class Estacion{
     @Id
     private Long id_estacion;
     @Getter @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL)
     private Ubicacion ubicacion;
 
     public Estacion() {
     }
 
     public Estacion(Ubicacion ubicacion) {
+        this.ubicacion = ubicacion;
+    }
+
+    public Long getId() {
+        return id_estacion;
+    }
+
+    public Ubicacion getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(Ubicacion ubicacion) {
         this.ubicacion = ubicacion;
     }
 }

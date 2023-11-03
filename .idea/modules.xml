@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/microservicios.iml" filepath="$PROJECT_DIR$/microservicios.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ArquiTPE.iml" filepath="$PROJECT_DIR$/ArquiTPE.iml" />
     </modules>
   </component>
 </project>
