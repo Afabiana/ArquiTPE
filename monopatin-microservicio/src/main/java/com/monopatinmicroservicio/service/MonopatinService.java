@@ -1,7 +1,6 @@
 package com.monopatinmicroservicio.service;
 
 import com.monopatinmicroservicio.model.Monopatin;
-import com.monopatinmicroservicio.model.MonopatinViaje;
 import com.monopatinmicroservicio.model.Ubicacion;
 import com.monopatinmicroservicio.repository.MonopatinRepository;
 import com.monopatinmicroservicio.repository.MonopatinViajeRepository;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service("monopatinService")
@@ -30,12 +28,21 @@ public class MonopatinService {
     }
 
     @Transactional
-    public ResponseEntity<MonopatinDTO> getMonopatin(Long id){
-        return ResponseEntity.ok(repository.findById(id)
+    public Optional<MonopatinDTO> getMonopatin(Long id){
+        Optional<Monopatin> monopatin = repository.findById(id);
+        if (monopatin.isPresent()){
+            return monopatin.map(MonopatinDTO::new);
+        }
+        return null;
+        /* return ResponseEntity.ok(repository.findById(id)
                 .map(MonopatinDTO::new)
                 .orElse(null));
+         */
     }
-
+    @Transactional
+    public ResponseEntity<Stream<MonopatinDTO>> getMonopatines() {
+        return ResponseEntity.ok(repository.findAll().stream().map(MonopatinDTO::new));
+    }
     @Transactional
     public ResponseEntity<?> deleteMonopatin(Long id) {
         repository.deleteById(id);
@@ -72,10 +79,6 @@ public class MonopatinService {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedMonopatinDTO);
     }
 
-    @Transactional
-    public ResponseEntity<Stream<MonopatinDTO>> getMonopatines() {
-        return ResponseEntity.ok(repository.findAll().stream().map(MonopatinDTO::new));
-    }
 
     public ResponseEntity<?> getMonopatinesMasUsados(int minCantidadViajes, int anio) {
         List<Object[]> resultado = this.monopatinViajeRepository.getMonopatinesMasUsados(minCantidadViajes, anio);

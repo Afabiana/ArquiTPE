@@ -1,10 +1,14 @@
 package com.monopatinmicroservicio.controller;
 
+import com.monopatinmicroservicio.model.Monopatin;
 import com.monopatinmicroservicio.model.Ubicacion;
 import com.monopatinmicroservicio.service.DTO.MonopatinDTO;
 import com.monopatinmicroservicio.service.MonopatinService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/monopatin")
@@ -17,7 +21,12 @@ public class MonopatinController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getMonopatin(@PathVariable Long id) {
-        return monopatinService.getMonopatin(id);
+        Optional<MonopatinDTO> monopatin = monopatinService.getMonopatin(id);
+        if (monopatin.isPresent()){
+            return ResponseEntity.ok(monopatin);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("no se haya un monnopatin con id "+id);
     }
 
     @GetMapping
