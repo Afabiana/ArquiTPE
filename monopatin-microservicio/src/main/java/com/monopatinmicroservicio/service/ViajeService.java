@@ -1,15 +1,21 @@
 package com.monopatinmicroservicio.service;
 
+import com.monopatinmicroservicio.model.Monopatin;
+import com.monopatinmicroservicio.model.MonopatinViaje;
 import com.monopatinmicroservicio.model.Tarifa;
 import com.monopatinmicroservicio.model.Viaje;
+import com.monopatinmicroservicio.repository.MonopatinRepository;
 import com.monopatinmicroservicio.repository.MonopatinViajeRepository;
 import com.monopatinmicroservicio.repository.TarifaRepository;
 import com.monopatinmicroservicio.repository.ViajeRepository;
 import com.monopatinmicroservicio.service.DTO.TarifaDTORequest;
+import com.monopatinmicroservicio.service.DTO.ViajeDTORequest;
 import com.monopatinmicroservicio.service.DTO.ViajeDTOResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.http.HttpStatus;
+import reactor.core.publisher.Mono;
 
 
 import java.util.List;
@@ -19,11 +25,13 @@ import java.util.Optional;
 public class ViajeService {
     private WebClient webClient;
     private ViajeRepository repository;
+    private MonopatinRepository monopatinRepository;
     private MonopatinViajeRepository monopatinViajeRepository;
     private TarifaRepository tarifaRepository;
 
     public ViajeService(ViajeRepository viajeRepository,
                         TarifaRepository tarifaRepository,
+                        MonopatinRepository monopatinRepository,
                         MonopatinViajeRepository monopatinViajeRepository) {
         this.webClient = WebClient.create();
         this.repository = viajeRepository;
@@ -31,6 +39,36 @@ public class ViajeService {
         this.monopatinViajeRepository = monopatinViajeRepository;
     }
 
+    @Transactional
+    public ViajeDTOResponse empezarViaje(ViajeDTORequest viaje) {
+        Optional<Monopatin> monopatinNuevo = this.monopatinRepository.findById(viaje.getId_monopatin());
+        if (monopatinNuevo.isEmpty()){
+            return null;
+        }
+        Viaje viajeNuevo = new Viaje(viaje);
+        MonopatinViaje monopatinViaje = new MonopatinViaje(viajeNuevo,monopatinNuevo.get());
+        this.monopatinViajeRepository.save(monopatinViaje);
+        //aca podria llamar a un metodo que empiece a cobrar en funcion del tiempo
+        //pero esa logica quizas la maneja quien consuma este microservicio
+        return new ViajeDTOResponse(viajeNuevo);
+    }
+
+    public Mono<Boolean> cobrarViaje(Viaje viaje, double monto) {
+        if (viaje.getHora_fin() == null) {
+            return webClient.put()
+                    .uri("http://localhost:8081/cuenta/descontar/"+viaje.getId_usuario())
+                    .bodyValue(monto)
+                    .retrieve()
+                    .toBodilessEntity()
+                    .thenReturn(true)
+                    .onErrorReturn(false);
+        }
+        return Mono.just(false);
+    }
+
+    public ViajeDTOResponse pausarViaje(Long id){
+        return null;
+    }
 
     @Transactional
     public Optional<ViajeDTOResponse> traerViaje(Long id) {
@@ -89,5 +127,4 @@ public class ViajeService {
         return false;
     }
 
-    //public ResponseEntity<?> empezarViaje(ViajeDTORequest viaje)
 }

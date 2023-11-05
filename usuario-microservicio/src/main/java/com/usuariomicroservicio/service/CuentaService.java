@@ -60,9 +60,12 @@ public class CuentaService {
         Optional<Cuenta> optionalCuenta = repository.findById(id);
         if (optionalCuenta.isPresent()) {
             Cuenta cuenta = optionalCuenta.get();
+            Double saldo = cuenta.getSaldo();
             cuenta.setSaldo(cuenta.getSaldo() - monto);
-            repository.save(cuenta);
-            return cuenta.getSaldo();
+            if (saldo - monto == cuenta.getSaldo()){
+                repository.save(cuenta);
+                return cuenta.getSaldo();
+            }
         }
         return null;
     }

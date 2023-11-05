@@ -132,7 +132,6 @@ public class MonopatinController {
     }
 
 
-
     //tiempo de uso y los kilómetros recorridos
     //tiempo con pausas y sin pausas. habria que hacer un sum de los tiempos de viaje etcetc
     //monopatines cercanos a mi zona, esto seria algo como si la diferencia de long y lat es menor a tanto = cerca

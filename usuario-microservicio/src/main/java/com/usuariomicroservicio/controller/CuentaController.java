@@ -66,7 +66,8 @@ public class CuentaController {
     }
 
     @PutMapping("descontar/{id}")
-    public ResponseEntity<?> cobrarTarifa(@PathVariable Long id, @PathVariable double monto) {
+    //endpoint de ejemplo: http://localhost:8081/cuenta/descontar/1
+    public ResponseEntity<?> cobrarTarifa(@PathVariable Long id, @RequestBody Double monto) {
         if (cuentaService.cobrarTarifa(id, monto) != null){
             return ResponseEntity.ok("se desconto con exito el saldo");
         }

@@ -27,11 +27,18 @@ public class ViajeController{
 
     //TODO: Falta crear el metodo empezarViaje. Estaria bueno hacerlo con webclient
 
-   /* @PostMapping("/empezar")
+   @PostMapping("/empezar")
     public ResponseEntity<?> empezarViaje(ViajeDTORequest viaje){
-        return viajeService.empezarViaje(viaje);
+        return ResponseEntity.ok(viajeService.empezarViaje(viaje));
     }
-    */
+
+    /* public ResponseEntity<?> pausarViaje(Long id){
+        this.viajeService.pauserViaje(id);
+    }*/
+
+    public ResponseEntity<?> terminarViaje(Long id){
+        return null;
+    }
 
     //metodos que necesitarian rol de admin u otro
 

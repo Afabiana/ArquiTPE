@@ -1,5 +1,7 @@
 package com.monopatinmicroservicio.model;
 
+import com.monopatinmicroservicio.service.DTO.ViajeDTORequest;
+import com.monopatinmicroservicio.service.DTO.ViajeDTOResponse;
 import jakarta.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -29,6 +31,18 @@ public class Viaje {
         this.id_usuario = id_usuario;
         this.costoTotal = 0.0;
     }
+
+    public Viaje(ViajeDTORequest dto){
+        this.hora_inicio = LocalDateTime.now();
+        this.hora_fin = null;
+        this.kms = 0.0;
+        this.segundosEstacionado = 0L;
+        this.id_usuario = dto.getId_usuario();
+        this.costoTotal = 0.0;
+    }
+
+
+
 
     public Long getId_viaje() {
         return id_viaje;
