@@ -3,7 +3,10 @@ package com.monopatinmicroservicio.model;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+
+
 import java.io.Serializable;
+
 
 @Entity
 public class MonopatinViaje implements Serializable {

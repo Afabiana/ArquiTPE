@@ -7,10 +7,10 @@ import java.io.Serializable;
 @Embeddable
 public class MonopatinViajeId implements Serializable {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_monopatin")
     private Monopatin id_monopatin;
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "id_viaje")
     private Viaje id_viaje;
 

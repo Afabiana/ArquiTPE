@@ -20,9 +20,6 @@ public class CuentaService {
         this.repository = repository;
     }
 
-    // public ResponseEntity<?> getAll() {
-    //    return new ResponseEntity<>(this.repository.findAll().stream().map(CuentaDTOResponse::new), HttpStatus.OK);
-    // }
 
     public Stream<CuentaDTOResponse> getAll() {
         return this.repository.findAll().stream().map(CuentaDTOResponse::new);
@@ -56,12 +53,14 @@ public class CuentaService {
         return null;
     }
 
-    public Double cobrarTarifa(Long id, double monto) {
+    public Double cobrarTarifa(Long id, Double monto) {
         Optional<Cuenta> optionalCuenta = repository.findById(id);
         if (optionalCuenta.isPresent()) {
+            // seteo el saldo de la cuenta y le asigno el nuevo saldo restandole el monto
             Cuenta cuenta = optionalCuenta.get();
             Double saldo = cuenta.getSaldo();
             cuenta.setSaldo(cuenta.getSaldo() - monto);
+
             if (saldo - monto == cuenta.getSaldo()){
                 repository.save(cuenta);
                 return cuenta.getSaldo();

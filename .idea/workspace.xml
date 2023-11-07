@@ -5,18 +5,43 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="534013d9-62e6-4301-a2a5-bd63fd87e580" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/model/Pausa.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/service/PausaRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jpa-buddy.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jpa-buddy.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monopatin-microservicio/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/monopatin-microservicio/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/controller/MonopatinController.java" beforeDir="false" afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/controller/MonopatinController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/controller/ViajeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/controller/ViajeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/model/Monopatin.java" beforeDir="false" afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/model/Monopatin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/model/MonopatinViaje.java" beforeDir="false" afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/model/MonopatinViaje.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/model/MonopatinViajeId.java" beforeDir="false" afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/model/MonopatinViajeId.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/model/Tarifa.java" beforeDir="false" afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/model/Tarifa.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/model/Viaje.java" beforeDir="false" afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/model/Viaje.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/repository/MonopatinViajeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/repository/MonopatinViajeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/repository/TarifaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/repository/TarifaRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/repository/ViajeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/repository/ViajeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/service/DTO/ReporteKilometrajeDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/service/DTO/ReporteKilometrajeDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/service/DTO/TarifaDTORequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/service/DTO/TarifaDTORequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/service/DTO/ViajeDTORequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/service/DTO/ViajeDTORequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/service/DTO/ViajeDTOResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/service/DTO/ViajeDTOResponse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/service/ViajeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/service/ViajeService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/usuario-microservicio/src/main/java/com/usuariomicroservicio/controller/CuentaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/usuario-microservicio/src/main/java/com/usuariomicroservicio/controller/CuentaController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/usuario-microservicio/src/main/java/com/usuariomicroservicio/service/CuentaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/usuario-microservicio/src/main/java/com/usuariomicroservicio/service/CuentaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/usuario-microservicio/target/classes/com/usuariomicroservicio/controller/CuentaController.class" beforeDir="false" afterPath="$PROJECT_DIR$/usuario-microservicio/target/classes/com/usuariomicroservicio/controller/CuentaController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/usuario-microservicio/target/classes/com/usuariomicroservicio/service/CuentaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/usuario-microservicio/target/classes/com/usuariomicroservicio/service/CuentaService.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="com.haulmont.jpb.JpaEntity" />
+        <option value="Interface" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -52,6 +77,9 @@
   }
 }</component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.monopatinmicroservicio.service" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\DELL\Music\ArquiTPE" />
     </key>
@@ -63,7 +91,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.UsuarioMicroservicioApplication">
+  <component name="RunManager" selected="Spring Boot.MonopatinMicroservicioApplication">
     <configuration name="MonopatinMicroservicioApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <module name="monopatin-microservicio" />
@@ -93,6 +121,10 @@
       <workItem from="1699050316167" duration="573000" />
       <workItem from="1699054469629" duration="5397000" />
       <workItem from="1699074648058" duration="4368000" />
+      <workItem from="1699146762290" duration="16357000" />
+      <workItem from="1699205410105" duration="11562000" />
+      <workItem from="1699221570948" duration="26790000" />
+      <workItem from="1699296750526" duration="8731000" />
     </task>
     <servers />
   </component>

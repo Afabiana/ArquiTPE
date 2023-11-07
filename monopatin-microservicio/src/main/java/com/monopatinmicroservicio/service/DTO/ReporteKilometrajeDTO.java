@@ -11,6 +11,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class ReporteKilometrajeDTO implements Serializable {
     private double kilometros_recorridos;
-    private Long minutos_uso;
+    private int minutos_uso;
     private Long cantidad_viajes;
 }

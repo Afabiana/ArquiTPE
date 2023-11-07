@@ -1,5 +1,8 @@
 package com.monopatinmicroservicio.repository;
+import com.monopatinmicroservicio.model.Monopatin;
 import com.monopatinmicroservicio.model.MonopatinViaje;
+import com.monopatinmicroservicio.model.MonopatinViajeId;
+import com.monopatinmicroservicio.model.Viaje;
 import com.monopatinmicroservicio.service.DTO.MonopatinMasUsadoDTO;
 import com.monopatinmicroservicio.service.DTO.ReporteKilometrajeDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -38,7 +41,7 @@ public interface MonopatinViajeRepository extends JpaRepository<MonopatinViaje, 
             SELECT
                 new com.monopatinmicroservicio.service.DTO.ReporteKilometrajeDTO(
                     SUM(viaje.kms),
-                    SUM((viaje.hora_inicio - viaje.hora_fin) / 60),
+                    SUM(DATE_DIFF(viaje.hora_inicio, viaje.hora_fin, 'MINUTE')),
                     COUNT(viaje.id_viaje)
             )
             FROM
@@ -60,8 +63,11 @@ public interface MonopatinViajeRepository extends JpaRepository<MonopatinViaje, 
             SELECT
                 new com.monopatinmicroservicio.service.DTO.ReporteKilometrajeDTO(
                     SUM(viaje.kms),
-                    SUM(((viaje.hora_inicio - viaje.hora_fin) - viaje.segundosEstacionado) / 60),
-                    COUNT(viaje.id_viaje)
+                     (
+                       DATE_DIFF(viaje.hora_inicio, viaje.hora_fin, 'MINUTE') -
+                       DATE_DIFF(viaje.pausa.hora_inicio, viaje.pausa.hora_fin, 'MINUTE')
+                     ),
+                     COUNT(viaje.id_viaje)
                 )
             FROM
                 MonopatinViaje mv
@@ -76,5 +82,13 @@ public interface MonopatinViajeRepository extends JpaRepository<MonopatinViaje, 
     )
     List<ReporteKilometrajeDTO> traerReporteKilometrajeSinPausas();
 
-
+    @Query("""
+        SELECT
+                mv.id.id_monopatin
+            FROM
+                MonopatinViaje mv
+            WHERE
+                mv.id.id_viaje.id_viaje = :id_viaje
+    """)
+    Monopatin findByViaje(Long id_viaje);
 }

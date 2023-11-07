@@ -1,6 +1,7 @@
 package com.monopatinmicroservicio.repository;
 
 import com.monopatinmicroservicio.model.Monopatin;
+import com.monopatinmicroservicio.model.MonopatinViaje;
 import com.monopatinmicroservicio.model.Viaje;
 import com.monopatinmicroservicio.service.DTO.MonopatinMasUsadoDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,6 +22,5 @@ public interface ViajeRepository extends JpaRepository<Viaje, Long> {
         """)
     //podria hacer un DTO para que devuelva el nombre del mes y el total facturado
     Double traerTotalFacturado(int anio, int mesDesde, int mesHasta);
-
 
 }

@@ -64,6 +64,7 @@ public class MonopatinController {
         return ResponseEntity.status(404).body("No se encontro el monopatin");
     }
 
+    //endpoint de ejemplo: http://localhost:55255/monopatin
     @PostMapping
     public ResponseEntity<?> agregarMonopatin(@RequestBody MonopatinDTO monopatinDTO) {
         MonopatinDTO monopatin = monopatinService.agregarMonopatin(monopatinDTO);

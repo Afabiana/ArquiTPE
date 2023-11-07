@@ -2,15 +2,15 @@ package com.monopatinmicroservicio.model;
 
 import com.monopatinmicroservicio.service.DTO.MonopatinDTO;
 import jakarta.persistence.*;
+import lombok.ToString;
 
-
+@ToString
 @Entity
 public class Monopatin {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id_monopatin;
-    //seguramente haya ubicaciones repetidas peeero...
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL) //cascade para que inserte ubicacion tambien
     @JoinColumn(name = "ubicacion_id")
     private Ubicacion ubicacion;

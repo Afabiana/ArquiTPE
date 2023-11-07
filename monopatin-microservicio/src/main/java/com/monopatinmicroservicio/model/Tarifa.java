@@ -1,54 +1,40 @@
 package com.monopatinmicroservicio.model;
 
 import com.monopatinmicroservicio.service.DTO.TarifaDTORequest;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
-
+@ToString
+@Getter
+@Setter
 @Entity
 public class Tarifa {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nombre;
-    private Double precio;
-    private LocalDate fecha_de_alta;
+    private String nombre; //nombre seria el tipo de tarifa
+    private Double valor_por_segundo;
+    private LocalDate fecha_habilitacion;
     private boolean habilitada;
 
     public Tarifa() {
     }
 
-    public Tarifa (String nombre, Double precio, LocalDate fecha_de_alta) {
+    public Tarifa (String nombre, Double valor_por_segundo, LocalDate fecha_de_alta) {
         this.nombre = nombre;
-        this.precio = precio;
+        this.valor_por_segundo = valor_por_segundo;
+        this.fecha_habilitacion = fecha_de_alta;
         this.habilitada = true;
     }
 
     public Tarifa (TarifaDTORequest tarifa) {
         this.nombre = tarifa.getNombre();
-        this.precio = tarifa.getPrecio();
+        this.valor_por_segundo = tarifa.getValor_por_segundo();
+        this.fecha_habilitacion = tarifa.getFecha_de_alta();
+        this.habilitada = tarifa.isHabilitada();
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public Double getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(Double precio) {
-        this.precio = precio;
-    }
 }

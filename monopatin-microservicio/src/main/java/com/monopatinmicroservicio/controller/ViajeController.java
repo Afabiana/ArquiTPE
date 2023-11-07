@@ -1,7 +1,9 @@
 package com.monopatinmicroservicio.controller;
 
+import com.monopatinmicroservicio.model.Viaje;
 import com.monopatinmicroservicio.service.DTO.TarifaDTORequest;
 import com.monopatinmicroservicio.service.DTO.ViajeDTORequest;
+import com.monopatinmicroservicio.service.DTO.ViajeDTOResponse;
 import com.monopatinmicroservicio.service.ViajeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,28 +18,49 @@ public class ViajeController{
         this.viajeService = viajeService;
     }
 
+
+    //endpoint de ejemplo: http://localhost:55255/viaje/1
     @GetMapping("/{id}")
-    public ResponseEntity<?> traerViaje(Long id){
-        if (viajeService.traerViaje(id) != null) {
+    public ResponseEntity<?> traerViaje(@PathVariable Long id){
+        if (!viajeService.traerViaje(id).isEmpty()) {
             return ResponseEntity.ok(viajeService.traerViaje(id));
         }
         return ResponseEntity.status(404).body("No se encontro el viaje");
     }
 
 
-    //TODO: Falta crear el metodo empezarViaje. Estaria bueno hacerlo con webclient
-
+    //endpoint de ejemplo: http://localhost:55255/viaje/empezar
+    //body de ejemplo:
+   /*{
+    "id_monopatin": 1,
+    "id_usuario": 1,
+    "id_tarifa": 1
+    }
+   * */
    @PostMapping("/empezar")
-    public ResponseEntity<?> empezarViaje(ViajeDTORequest viaje){
-        return ResponseEntity.ok(viajeService.empezarViaje(viaje));
+    public ResponseEntity<?> empezarViaje(@RequestBody ViajeDTORequest viajeDTORequest){
+       ViajeDTOResponse response = this.viajeService.empezarViaje(viajeDTORequest);
+        if (response == null)
+            return ResponseEntity.status(404).body("No se pudo iniciar el viaje");
+        return ResponseEntity.ok(response);
     }
 
-    /* public ResponseEntity<?> pausarViaje(Long id){
-        this.viajeService.pauserViaje(id);
-    }*/
 
-    public ResponseEntity<?> terminarViaje(Long id){
-        return null;
+    //endpoint de ejemplo http://localhost:55255/viaje/pausar/1
+    @PutMapping("/pausar/{id_viaje}")
+    public ResponseEntity<?> pausarViaje(@PathVariable Long id_viaje){
+        return ResponseEntity.ok(viajeService.pausarViaje(id_viaje));
+    }
+
+    @PutMapping("/reanudar/{id_viaje}")
+    //endpoint de ejemplo http://localhost:55255/viaje/reanudar/1
+    public ResponseEntity reanudarViaje(@PathVariable Long id_viaje){
+        return ResponseEntity.ok(viajeService.reanudarViaje(id_viaje));
+    }
+
+    @PutMapping("/terminar/{id}")
+    public ResponseEntity<?> terminarViaje(@PathVariable Long id){
+        return ResponseEntity.ok(viajeService.terminarViaje(id));
     }
 
     //metodos que necesitarian rol de admin u otro
@@ -65,13 +88,21 @@ public class ViajeController{
         return ResponseEntity.status(404).body("No se encontro el viaje");
     }
 
+    /*endpoint de ejemplo: http://localhost:55255/viaje/tarifa FUNCIONA
+    body de ejemplo:{
+        "nombre": "normal",
+        "precio": 10.0,
+        "fecha_de_alta": "2023-11-05",
+        "habilitada": true
+    }
+     */
     @PostMapping("/tarifa")
     public ResponseEntity<?> agregarTarifa(@RequestBody TarifaDTORequest tarifa) {
         Double tarifaAgregada = viajeService.agregarTarifa(tarifa);
         if (tarifaAgregada != null) {
             return new ResponseEntity<>(tarifaAgregada, HttpStatus.CREATED);
         }
-        return ResponseEntity.status(404).body("No se encontro el viaje");
+        return ResponseEntity.status(404).body("Tarifa no agregada");
     }
 
     @GetMapping("/totalFacturado?anio={anio}&mesDesde={mesDesde}&mesHasta={mesHasta}")

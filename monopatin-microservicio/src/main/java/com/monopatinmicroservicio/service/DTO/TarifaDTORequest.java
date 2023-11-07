@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class TarifaDTORequest implements Serializable {
     private String nombre;
-    private Double precio;
+    private Double valor_por_segundo;
     private LocalDate fecha_de_alta;
     private boolean habilitada;
 }
