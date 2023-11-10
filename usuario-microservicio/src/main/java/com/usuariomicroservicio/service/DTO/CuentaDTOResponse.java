@@ -14,9 +14,11 @@ import java.time.LocalDate;
 public class CuentaDTOResponse implements Serializable {
     private Long id_cuenta;
     private Double saldo;
+    private Boolean habilitada;
 
     public CuentaDTOResponse(Cuenta cuenta){
         this.id_cuenta = cuenta.getId_cuenta();
         this.saldo = cuenta.getSaldo();
+        this.habilitada = cuenta.getHabilitada();
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -22,36 +23,34 @@ public class UsuarioService {
         this.usuarioCuentaRepository = usuarioCuentaRepository;
     }
 
-    public ResponseEntity<UsuarioDTOResponse> traerUsuario(Long id) {
-        return ResponseEntity.ok(repository.findById(id)
+    public Stream<UsuarioDTOResponse> traerTodosUsuarios() {
+        return repository.findAll().stream().map(UsuarioDTOResponse::new);
+    }
+
+    public UsuarioDTOResponse traerUsuario(Long id) {
+        return repository.findById(id)
                 .map(UsuarioDTOResponse::new)
-                .orElse(null));
+                .orElse(null);
     }
 
-    public ResponseEntity<Stream<UsuarioDTOResponse>> traerTodo() {
-        return ResponseEntity.ok(repository.findAll().stream().map(UsuarioDTOResponse::new));
+    public Usuario guardarUsuario(UsuarioDTORequest usuario) {
+        return repository.save(new Usuario((usuario)));
     }
 
-    //aca si dejamos que devuelva el usuario para que se vea si todos los atributos estan bien
-    public ResponseEntity<?> guardarUsuario(UsuarioDTORequest usuario) {
-        return new ResponseEntity<>(repository.save(new Usuario(usuario)), HttpStatus.CREATED);
-    }
-
-    public ResponseEntity<?> eliminarUsuario(Long id) {
+    public void eliminarUsuario(Long id) {
         repository.deleteById(id);
-        return ResponseEntity.ok("se elimino con exito");
     }
 
-    public ResponseEntity<?> cambiarEstadoCuenta(Long id, boolean isHabilitada) {
+    /*public ResponseEntity<?> cambiarEstadoCuenta(Long id, boolean isHabilitada) {
         Optional<Usuario> optionalUsuario = repository.findById(id);
         if (optionalUsuario.isPresent()) {
             Usuario usuario = optionalUsuario.get();
-            usuario.setHabilitada(isHabilitada);
+            // usuario.setHabilitada(isHabilitada);
             repository.save(usuario);
             return ResponseEntity.ok().body("Se modifico con exito");
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró el usuario con el ID proporcionado");
-    }
+    }*/
 
 
     public ResponseEntity<?> traerSaldo(Long id) {
