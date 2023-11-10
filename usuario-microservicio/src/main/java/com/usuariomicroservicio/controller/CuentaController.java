@@ -1,6 +1,7 @@
 package com.usuariomicroservicio.controller;
 
 import com.usuariomicroservicio.model.Cuenta;
+import com.usuariomicroservicio.model.Ubicacion;
 import com.usuariomicroservicio.service.CuentaService;
 import com.usuariomicroservicio.service.DTO.CuentaDTORequest;
 import com.usuariomicroservicio.service.DTO.CuentaDTOResponse;
@@ -86,8 +87,8 @@ public class CuentaController {
     */
     // Funcionalidades extra
     // TODO-monopatin
-    @GetMapping("/monopatines/{zona}")
-    public  ResponseEntity<?> getMonopatinesCercanos(@PathVariable String zona){
+    @GetMapping("/monopatines")
+    public  ResponseEntity<?> getMonopatinesCercanos(@RequestBody Ubicacion ubicacion){
         // TODO - Comunicarse con microservicio de monopatin;
         return null;
     }

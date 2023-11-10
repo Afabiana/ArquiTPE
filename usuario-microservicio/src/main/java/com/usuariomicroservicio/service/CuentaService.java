@@ -1,6 +1,7 @@
 package com.usuariomicroservicio.service;
 
 import com.usuariomicroservicio.model.Cuenta;
+import com.usuariomicroservicio.model.Ubicacion;
 import com.usuariomicroservicio.model.Usuario;
 import com.usuariomicroservicio.repository.CuentaRepository;
 import com.usuariomicroservicio.repository.UsuarioCuentaRepository;
@@ -71,7 +72,7 @@ public class CuentaService {
     */
 
     // Funcionalidades extra
-    public Stream<?> getAllMonopatinesByZona(String zona){
+    public Stream<?> getAllMonopatinesByZona(Ubicacion ubicacion){
         // TODO - Comunicarse con microservicio de monopatin;
         return null;
     }
