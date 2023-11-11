@@ -26,7 +26,7 @@ public class MonopatinService {
         this.repository = repository;
         this.monopatinViajeRepository = monopatinViajeRepository;
     }
-
+    // CRUD
     @Transactional
     public Optional<MonopatinDTO> traerMonopatin(Long id){
         Optional<Monopatin> monopatin = repository.findById(id);
@@ -37,14 +37,30 @@ public class MonopatinService {
     }
 
     @Transactional
-    public boolean eliminarMonopatin(Long id) {
-        if (repository.existsById(id)){
-            repository.deleteById(id);
-            return true;
-        }
-        return false;
+    public Stream<MonopatinDTO> traerMonopatines() {
+        return repository.findAll().stream().map(MonopatinDTO::new);
     }
 
+    @Transactional
+    public boolean eliminarMonopatin(Long id) {
+        try{
+            if (repository.existsById(id)){
+                repository.deleteById(id);
+                return true;
+            }
+            return false;
+        }catch (Error err){
+            return false;
+        }
+    }
+
+    @Transactional
+    public MonopatinDTO agregarMonopatin(MonopatinDTO monopatin){
+        Monopatin savedMonopatin = repository.save(new Monopatin(monopatin));
+        return new MonopatinDTO(savedMonopatin);
+    }
+
+    // OTRAS
     @Transactional
     public boolean cambiarDisponibilidad(Long id, boolean disponible) {
         Monopatin monopatin = repository.findById(id).orElse(null);
@@ -70,16 +86,7 @@ public class MonopatinService {
         return false;
     }
 
-    @Transactional
-    public MonopatinDTO agregarMonopatin(MonopatinDTO monopatin){
-        Monopatin savedMonopatin = repository.save(new Monopatin(monopatin));
-        return new MonopatinDTO(savedMonopatin);
-    }
 
-    @Transactional
-    public Stream<MonopatinDTO> traerMonopatines() {
-        return repository.findAll().stream().map(MonopatinDTO::new);
-    }
 
     @Transactional
     public List<MonopatinDTO> traerMonopatinesCercanos(double latitud, double longitud, double limite) {

@@ -4,8 +4,14 @@ import com.monopatinmicroservicio.model.Ubicacion;
 import com.monopatinmicroservicio.service.DTO.EstacionDTO;
 import com.monopatinmicroservicio.service.DTO.MonopatinDTO;
 import com.monopatinmicroservicio.service.MonopatinService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
+
+import java.util.Optional;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/monopatin")
@@ -21,15 +27,22 @@ public class MonopatinController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> traerMonopatin(@PathVariable Long id) {
-        if (monopatinService.traerMonopatin(id).isPresent()) {
-            return ResponseEntity.ok(monopatinService.traerMonopatin(id));
+        Optional<MonopatinDTO> monopatin = monopatinService.traerMonopatin(id);
+        if (monopatin.isPresent()) {
+            return ResponseEntity.ok(monopatin);
         }
-        return ResponseEntity.status(404).body("No se encontro el monopatin");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("No se encontro el monopatin con id "+id);
     }
 
     @GetMapping
     public ResponseEntity<?> traerMonopatines() {
-        return ResponseEntity.ok(monopatinService.traerMonopatines());
+        Stream<MonopatinDTO> monopatinStream = monopatinService.traerMonopatines();
+        if (monopatinStream.findAny().isPresent()){
+            return ResponseEntity.ok(monopatinStream);
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("algo salio mal");
     }
 
 
@@ -38,13 +51,14 @@ public class MonopatinController {
         if (monopatinService.actualizarUbicacion(id, ubicacion)) {
             return ResponseEntity.ok().body("Se modifico con exito");
         }
-        return ResponseEntity.status(404).body("No se encontro el monopatin");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontro el monopatin");
     }
 
     @GetMapping("/cercanos")
     public ResponseEntity<?> traerMonopatinesCercanos(@RequestParam(name = "maxdistancia")double maxDistancia,
                                                     @RequestParam(name = "latitud") double latitud,
                                                     @RequestParam(name = "longitud") double longitud) {
+        // TODO - deberia venir por body
         return ResponseEntity.ok(monopatinService.traerMonopatinesCercanos(latitud, longitud, maxDistancia));
     }
 
@@ -61,7 +75,7 @@ public class MonopatinController {
         if (monopatinService.eliminarMonopatin(id)) {
             return ResponseEntity.ok().body("Monopatin eliminado");
         }
-        return ResponseEntity.status(404).body("No se encontro el monopatin");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontro el monopatin");
     }
 
     //endpoint de ejemplo: http://localhost:55255/monopatin
@@ -71,11 +85,13 @@ public class MonopatinController {
         if (monopatin != null) {
             return ResponseEntity.ok(monopatin);
         }
-        return ResponseEntity.status(404).body("No se encontro el monopatin");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("algo salio mal");
     }
 
     @GetMapping("/monopatinesMasUsados/minCantidadViajes={minCantidadViajes}&anio={anio}")
     public ResponseEntity<?> traerMonopatinesMasUsados(@PathVariable int minCantidadViajes, @PathVariable int anio) {
+        // TODO - params por query
         return ResponseEntity.ok(monopatinService.traerMonopatinesMasUsados(minCantidadViajes, anio));
     }
 
@@ -129,7 +145,7 @@ public class MonopatinController {
 
     @GetMapping("/kilometraje/total")
     public ResponseEntity<?> traerReporteKilometrajeTotal() {
-        return ResponseEntity.ok(monopatinService.traerReporteKilometrajeSinPausas()); //esto es a propocito, porque la consulta es la misma
+        return ResponseEntity.ok(monopatinService.traerReporteKilometrajeSinPausas()); //esto es a proposito, porque la consulta es la misma
     }
 
 
