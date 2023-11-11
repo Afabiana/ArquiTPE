@@ -16,8 +16,7 @@ public interface EstacionRepository extends JpaRepository<Estacion, Long> {
             FROM
                 Estacion e
             ORDER BY
-                ST_Distance(e.ubicacion, :latitud, :longitud) DESC
-            LIMIT 5
+                ST_Distance(POINT(e.ubicacion.latitud, e.ubicacion.longitud), POINT(:latitud, :longitud)) ASC            LIMIT 5
         """
     )
     List<EstacionDTO> traerEstacionesMasCercanas(double latitud, double longitud);
