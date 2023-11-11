@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.*;
 public class MonopatinController {
     private MonopatinService monopatinService;
 
-    //TODO: Falta crear el metodo empezarViaje. Estaria bueno hacerlo con webclient
-    //TODO: falta manejar lo de las pausas. Con un contador estaria.
-
     public MonopatinController(MonopatinService monopatinService) {
         this.monopatinService = monopatinService;
     }
@@ -41,11 +38,16 @@ public class MonopatinController {
         return ResponseEntity.status(404).body("No se encontro el monopatin");
     }
 
+    /**
+     * TODO: puedo hacer un DTO de ubi que me traiga los 3 params por body
+     *
+     * endpoint de ej: http://localhost:55255/monopatin/cercanos?maxdistancia=0.5&latitud=-34.603722&longitud=-58.381592
+     */
     @GetMapping("/cercanos")
-    public ResponseEntity<?> traerMonopatinesCercanos(@RequestParam(name = "maxdistancia")double maxDistancia,
-                                                    @RequestParam(name = "latitud") double latitud,
+    public ResponseEntity<?> traerMonopatinesCercanos(@RequestParam(name = "latitud") double latitud,
                                                     @RequestParam(name = "longitud") double longitud) {
-        return ResponseEntity.ok(monopatinService.traerMonopatinesCercanos(latitud, longitud, maxDistancia));
+        System.out.println("latitud: " + latitud + " longitud: " + longitud );
+        return ResponseEntity.ok(monopatinService.traerMonopatinesCercanos(latitud, longitud));
     }
 
     @GetMapping("/estaciones")
@@ -56,6 +58,7 @@ public class MonopatinController {
 
     //estos metodos requieren permisos de admin o mantenimiento
 
+    //endpoint de ejemplo: http://localhost:55255/monopatin/1
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarMonopatin(@PathVariable Long id) {
         if (monopatinService.eliminarMonopatin(id)) {
@@ -65,6 +68,14 @@ public class MonopatinController {
     }
 
     //endpoint de ejemplo: http://localhost:55255/monopatin
+
+    /**
+     * {
+     *     "latitud": -37.33333,
+     *     "longitud": 59.1111,
+     *     "disponibilidad": false
+     * }
+     */
     @PostMapping
     public ResponseEntity<?> agregarMonopatin(@RequestBody MonopatinDTO monopatinDTO) {
         MonopatinDTO monopatin = monopatinService.agregarMonopatin(monopatinDTO);
@@ -74,7 +85,7 @@ public class MonopatinController {
         return ResponseEntity.status(404).body("No se encontro el monopatin");
     }
 
-    @GetMapping("/monopatinesMasUsados/minCantidadViajes={minCantidadViajes}&anio={anio}")
+    @GetMapping("/masUsados/minCantidadViajes={minCantidadViajes}&anio={anio}")
     public ResponseEntity<?> traerMonopatinesMasUsados(@PathVariable int minCantidadViajes, @PathVariable int anio) {
         return ResponseEntity.ok(monopatinService.traerMonopatinesMasUsados(minCantidadViajes, anio));
     }
@@ -133,11 +144,5 @@ public class MonopatinController {
     }
 
 
-    //tiempo de uso y los kilómetros recorridos
-    //tiempo con pausas y sin pausas. habria que hacer un sum de los tiempos de viaje etcetc
-    //monopatines cercanos a mi zona, esto seria algo como si la diferencia de long y lat es menor a tanto = cerca
-    //buscar monopatines por ubicacion (long y lat)
-    //buscar monopatines que necesiten mantenimiento
-    //buscar por tiempo de uso
 }
 

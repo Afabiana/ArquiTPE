@@ -7,17 +7,18 @@ import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
 @Entity
-public class Ubicacion {
+public class Ubicacion{
 
-    @Id @Getter
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_ubicacion;
 
-    @Getter @Setter
+    @Setter
     private double latitud;
 
-    @Getter @Setter
+    @Setter
     private double longitud;
 
     public Ubicacion() {
@@ -28,4 +29,7 @@ public class Ubicacion {
         this.longitud = longitud;
     }
 
+    public String toString() {
+        return "Ubicacion(id_ubicacion=" + this.getId_ubicacion() + ", latitud=" + this.getLatitud() + ", longitud=" + this.getLongitud() + ")";
+    }
 }

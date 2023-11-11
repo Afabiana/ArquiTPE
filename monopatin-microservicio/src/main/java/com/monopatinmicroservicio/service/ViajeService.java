@@ -220,6 +220,7 @@ public class ViajeService {
 
         //libero el monopatin
         Monopatin monopatin = this.monopatinViajeRepository.findByViaje(viaje.getId_viaje());
+        System.out.println(monopatin);
         monopatin.setDisponibilidad(true);
         this.monopatinRepository.save(monopatin);
         return true;

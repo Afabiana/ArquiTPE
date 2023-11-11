@@ -7,25 +7,24 @@ import com.monopatinmicroservicio.repository.MonopatinViajeRepository;
 import com.monopatinmicroservicio.repository.TarifaRepository;
 import com.monopatinmicroservicio.service.DTO.*;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 @Service("monopatinService")
+@RequiredArgsConstructor
 public class MonopatinService {
 
-    private MonopatinRepository repository;
-    private EstacionRepository estacionRepository;
-    private MonopatinViajeRepository monopatinViajeRepository;
-
-    public MonopatinService(MonopatinRepository repository) {
-        this.repository = repository;
-        this.monopatinViajeRepository = monopatinViajeRepository;
-    }
+    private final MonopatinRepository repository;
+    private final EstacionRepository estacionRepository;
+    private final MonopatinViajeRepository monopatinViajeRepository;
 
     @Transactional
     public Optional<MonopatinDTO> traerMonopatin(Long id){
@@ -82,10 +81,17 @@ public class MonopatinService {
     }
 
     @Transactional
-    public List<MonopatinDTO> traerMonopatinesCercanos(double latitud, double longitud, double limite) {
-        List<MonopatinDTO> monopatines = repository.traerMonopatinesCercanos(latitud, longitud, limite * 1000)
+    public List<MonopatinDTO> traerMonopatinesCercanos(double latitud, double longitud) {
+        System.out.println("latitud: " + latitud + " longitud: " + longitud);
+        List<MonopatinDTO> monopatines = repository.traerMonopatinesCercanos(latitud, longitud)
                 .stream()
-                .map(MonopatinDTO::new)
+                //.map(MonopatinDTO::new)
+                .map(m ->{
+                    Monopatin monopatin = (Monopatin) m[0];
+                    Double distancia = (Double) m[1];
+                    System.out.println("monopatin: " + monopatin + " distancia: " + distancia);
+                    return new MonopatinDTO(monopatin);
+                })
                 .toList();
         return monopatines;
     }
@@ -96,6 +102,7 @@ public class MonopatinService {
         List<MonopatinMasUsadoDTO> masUsados = this.monopatinViajeRepository.traerMonopatinesMasUsados(minCantidadViajes, anio);
 
         if (!masUsados.isEmpty()) {
+            System.out.println(masUsados);
             return Optional.of(masUsados);
         }
 
@@ -104,7 +111,7 @@ public class MonopatinService {
 
 
     @Transactional
-    public List<ReporteEstadoMonopatinesDTO> traerReporteEstadoMonopatines() {
+    public ReporteEstadoMonopatinesDTO traerReporteEstadoMonopatines() {
         return repository.traerReporteEstadoMonopatines();
     }
 
@@ -127,12 +134,26 @@ public class MonopatinService {
 
     @Transactional
     public List<ReporteKilometrajeDTO> traerReporteKilometrajeConPausas() {
-        return monopatinViajeRepository.traerReporteKilometrajeConPausas();
+        return monopatinViajeRepository.traerReporteKilometrajeConPausas().stream().map(m -> {
+            ReporteKilometrajeDTO reporteKilometrajeDTO = new ReporteKilometrajeDTO();
+            reporteKilometrajeDTO.setKilometros_recorridos((Double) m[0]);
+            reporteKilometrajeDTO.setMinutos_uso((BigDecimal) m[1]);
+            reporteKilometrajeDTO.setCantidad_viajes(((Long) m[2]));
+            return reporteKilometrajeDTO;
+        }).toList();
     }
 
     @Transactional
     public List<ReporteKilometrajeDTO> traerReporteKilometrajeSinPausas() {
-        return monopatinViajeRepository.traerReporteKilometrajeSinPausas();
+        return monopatinViajeRepository.traerReporteKilometrajeSinPausas().stream().map(
+                m->{
+                    ReporteKilometrajeDTO reporteKilometrajeDTO = new ReporteKilometrajeDTO();
+                    reporteKilometrajeDTO.setKilometros_recorridos((Double) m[0]);
+                    reporteKilometrajeDTO.setMinutos_uso((BigDecimal) m[1]);
+                    reporteKilometrajeDTO.setCantidad_viajes(((Long) m[2]));
+                    return reporteKilometrajeDTO;
+                }
+        ).toList();
     }
 
     @Transactional

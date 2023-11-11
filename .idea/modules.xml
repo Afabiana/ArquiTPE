@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ArquiTPE.iml" filepath="$PROJECT_DIR$/ArquiTPE.iml" />
+      <module fileurl="file://$PROJECT_DIR$/monopatin-microservicio/monopatin-microservicio.iml" filepath="$PROJECT_DIR$/monopatin-microservicio/monopatin-microservicio.iml" />
     </modules>
   </component>
 </project>
