@@ -4,13 +4,8 @@ import com.monopatinmicroservicio.model.*;
 import com.monopatinmicroservicio.repository.EstacionRepository;
 import com.monopatinmicroservicio.repository.MonopatinRepository;
 import com.monopatinmicroservicio.repository.MonopatinViajeRepository;
-import com.monopatinmicroservicio.repository.TarifaRepository;
 import com.monopatinmicroservicio.service.DTO.*;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,13 +14,18 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @Service("monopatinService")
-@RequiredArgsConstructor
 public class MonopatinService {
 
     private final MonopatinRepository repository;
     private final EstacionRepository estacionRepository;
     private final MonopatinViajeRepository monopatinViajeRepository;
 
+    public MonopatinService(MonopatinRepository repository, EstacionRepository estacionRepository, MonopatinViajeRepository monopatinViajeRepository) {
+        this.repository = repository;
+        this.monopatinViajeRepository = monopatinViajeRepository;
+        this.estacionRepository = estacionRepository;
+    }
+    // CRUD
     @Transactional
     public Optional<MonopatinDTO> traerMonopatin(Long id){
         Optional<Monopatin> monopatin = repository.findById(id);
@@ -36,14 +36,30 @@ public class MonopatinService {
     }
 
     @Transactional
-    public boolean eliminarMonopatin(Long id) {
-        if (repository.existsById(id)){
-            repository.deleteById(id);
-            return true;
-        }
-        return false;
+    public Stream<MonopatinDTO> traerMonopatines() {
+        return repository.findAll().stream().map(MonopatinDTO::new);
     }
 
+    @Transactional
+    public boolean eliminarMonopatin(Long id) {
+        try{
+            if (repository.existsById(id)){
+                repository.deleteById(id);
+                return true;
+            }
+            return false;
+        }catch (Error err){
+            return false;
+        }
+    }
+
+    @Transactional
+    public MonopatinDTO agregarMonopatin(MonopatinDTO monopatin){
+        Monopatin savedMonopatin = repository.save(new Monopatin(monopatin));
+        return new MonopatinDTO(savedMonopatin);
+    }
+
+    // OTRAS
     @Transactional
     public boolean cambiarDisponibilidad(Long id, boolean disponible) {
         Monopatin monopatin = repository.findById(id).orElse(null);
@@ -69,24 +85,13 @@ public class MonopatinService {
         return false;
     }
 
-    @Transactional
-    public MonopatinDTO agregarMonopatin(MonopatinDTO monopatin){
-        Monopatin savedMonopatin = repository.save(new Monopatin(monopatin));
-        return new MonopatinDTO(savedMonopatin);
-    }
 
-    @Transactional
-    public Stream<MonopatinDTO> traerMonopatines() {
-        return repository.findAll().stream().map(MonopatinDTO::new);
-    }
 
     @Transactional
     public List<MonopatinDTO> traerMonopatinesCercanos(double latitud, double longitud) {
-        System.out.println("latitud: " + latitud + " longitud: " + longitud);
         List<MonopatinDTO> monopatines = repository.traerMonopatinesCercanos(latitud, longitud)
                 .stream()
-                //.map(MonopatinDTO::new)
-                .map(m ->{
+                .map(m->{
                     Monopatin monopatin = (Monopatin) m[0];
                     Double distancia = (Double) m[1];
                     System.out.println("monopatin: " + monopatin + " distancia: " + distancia);
@@ -102,7 +107,6 @@ public class MonopatinService {
         List<MonopatinMasUsadoDTO> masUsados = this.monopatinViajeRepository.traerMonopatinesMasUsados(minCantidadViajes, anio);
 
         if (!masUsados.isEmpty()) {
-            System.out.println(masUsados);
             return Optional.of(masUsados);
         }
 
