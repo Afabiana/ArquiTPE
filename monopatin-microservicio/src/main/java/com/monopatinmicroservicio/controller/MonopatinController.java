@@ -40,7 +40,7 @@ public class MonopatinController {
 
     /**
      * TODO: puedo hacer un DTO de ubi que me traiga los 3 params por body
-     * @Bug responde pero no retorna los valores correctos
+     *
      * endpoint de ej: http://localhost:55255/monopatin/cercanos?maxdistancia=0.5&latitud=-34.603722&longitud=-58.381592
      */
     @GetMapping("/cercanos")
@@ -144,11 +144,5 @@ public class MonopatinController {
     }
 
 
-    //tiempo de uso y los kilómetros recorridos
-    //tiempo con pausas y sin pausas. habria que hacer un sum de los tiempos de viaje etcetc
-    //monopatines cercanos a mi zona, esto seria algo como si la diferencia de long y lat es menor a tanto = cerca
-    //buscar monopatines por ubicacion (long y lat)
-    //buscar monopatines que necesiten mantenimiento
-    //buscar por tiempo de uso
 }
 
