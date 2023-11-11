@@ -2,14 +2,19 @@ package com.usuariomicroservicio.model;
 
 import com.usuariomicroservicio.service.DTO.CuentaDTORequest;
 import jakarta.persistence.*;
+import lombok.Data;
+
 import java.time.LocalDate;
 @Entity
+@Data
 public class Cuenta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_cuenta;
     private LocalDate fecha_de_alta;
     private Double saldo;
+    private Boolean habilitada;
+
 
 
     public Cuenta() {

@@ -2,6 +2,7 @@ package com.usuariomicroservicio.service;
 
 import com.usuariomicroservicio.model.Cuenta;
 import com.usuariomicroservicio.repository.CuentaRepository;
+import com.usuariomicroservicio.repository.UsuarioCuentaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,9 +16,12 @@ import java.util.stream.Stream;
 @Service("CuentaService")
 public class CuentaService {
     private CuentaRepository repository;
+    private UsuarioCuentaRepository usuarioCuentaRepository;
 
-    public CuentaService(CuentaRepository repository) {
+
+    public CuentaService(CuentaRepository repository, UsuarioCuentaRepository usuarioCuentaRepository) {
         this.repository = repository;
+        this.usuarioCuentaRepository = usuarioCuentaRepository;
     }
 
 
@@ -39,8 +43,38 @@ public class CuentaService {
     }
 
     public Long eliminarCuenta(Long id) {
-        repository.deleteById(id);
-        return id;
+        try{
+            repository.deleteById(id);
+            return id;
+        }catch (Error err){
+            return null;
+        }
+    }
+
+    // habilitar/desahbilitar cuenta
+    public boolean cambiarEstadoCuenta(Long id, boolean isHabilitada) {
+        try{
+            Optional<Cuenta> optionalCuenta = repository.findById(id);
+            if (optionalCuenta.isPresent()) {
+                Cuenta cuenta = optionalCuenta.get();
+                cuenta.setHabilitada(isHabilitada);
+                repository.save(cuenta);
+                return true;
+            }
+            return false;
+        }catch (Error err){
+            return false;
+        }
+    }
+
+    // Saldo
+    public Double traerSaldo(Long id) {
+        Optional<Cuenta> optionalCuenta = repository.findById(id);
+        if (optionalCuenta.isPresent()) {
+            return usuarioCuentaRepository.getSaldoByUserId(id);
+        }
+        return null;
+        // TODO- check sql
     }
 
     public Double cargarSaldo(Long id, double monto) {
@@ -56,7 +90,6 @@ public class CuentaService {
     public Double cobrarTarifa(Long id, Double monto) {
         Optional<Cuenta> optionalCuenta = repository.findById(id);
         if (optionalCuenta.isPresent()) {
-            // seteo el saldo de la cuenta y le asigno el nuevo saldo restandole el monto
             Cuenta cuenta = optionalCuenta.get();
             Double saldo = cuenta.getSaldo();
             cuenta.setSaldo(cuenta.getSaldo() - monto);

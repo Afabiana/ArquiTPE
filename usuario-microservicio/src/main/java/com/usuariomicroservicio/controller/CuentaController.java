@@ -47,32 +47,70 @@ public class CuentaController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarCuenta(@PathVariable Long id) {
-        try{
-            long deletedID = cuentaService.eliminarCuenta(id);
-            return ResponseEntity.ok("se elimino con exito la cuenta con id "+ deletedID);
-        }catch (Error err){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("No fue posible eliminar la cuenta con id "+id);
+        Long deletedID = cuentaService.eliminarCuenta(id);
+        if (deletedID != null){
+            return ResponseEntity
+                    .ok("se elimino con exito la cuenta con id "+ deletedID);
         }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("algo salio mal");
     }
 
-    // TODO...
-    @PutMapping("cargarSaldo/{id}")
-    public ResponseEntity<?> cargarSaldo(@PathVariable Long id, @PathVariable double monto) {
-        if (cuentaService.cargarSaldo(id, monto) != null){
-            return ResponseEntity.ok("se cargo con exito el saldo");
+    // Habilitar/ Deshabilitar cuenta
+    @PutMapping("/habilitar/{id}")
+    public ResponseEntity<?> habilitarCuenta(@PathVariable Long id) {
+        boolean isHabilitada = cuentaService.cambiarEstadoCuenta(id,true);
+        if (isHabilitada){
+            return ResponseEntity.ok().body("Se modifico con exito");
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró la cuenta con el ID proporcionado");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("No se encontró el usuario con el usuario con id "+id);
+    }
+
+    @PutMapping("/deshabilitar/{id}")
+    public ResponseEntity<?> deshabilitarCuenta(@PathVariable Long id) {
+        boolean isHabilitada = cuentaService.cambiarEstadoCuenta(id,false);
+        if (isHabilitada){
+            return ResponseEntity.ok().body("Se modifico con exito");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("No se encontró el usuario con el usuario con id "+id);
+    }
+    // Saldo
+    @GetMapping("/saldo/{idCuenta}")
+    public ResponseEntity<?> traerSaldo(@PathVariable Long idCuenta){
+        Double saldo = cuentaService.traerSaldo(idCuenta);
+        if (saldo != null) {
+            return ResponseEntity.ok(saldo);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("No se encontró el usuario con el ID proporcionado");
+    }
+
+    @PutMapping("/saldo/{idCuenta}")
+    public ResponseEntity<?> cargarSaldo(
+            @PathVariable Long idCuenta, @RequestBody double monto
+    ){
+        Double saldo = cuentaService.cargarSaldo(idCuenta, monto);
+        if (saldo != null) {
+            return ResponseEntity.ok(saldo);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("No se encontró el usuario con el id "+idCuenta);
     }
 
     @PutMapping("descontar/{id}")
     //endpoint de ejemplo: http://localhost:8081/cuenta/descontar/1?monto=100
-    public ResponseEntity<?> cobrarTarifa(@PathVariable Long id, @RequestParam Double monto) {
-        System.out.println("id: " + id);
-        if (cuentaService.cobrarTarifa(id, monto) != null){
-            return ResponseEntity.ok("se desconto con exito el saldo");
+    public ResponseEntity<?> cobrarTarifa(
+            @PathVariable Long id, @RequestBody double monto
+    ) {
+        Double saldo = cuentaService.cobrarTarifa(id, monto);
+        if (saldo != null){
+            return ResponseEntity.ok(saldo);
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró la cuenta con el ID proporcionado");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("No se encontró la cuenta con el id "+id);
     }
+
 
 }
