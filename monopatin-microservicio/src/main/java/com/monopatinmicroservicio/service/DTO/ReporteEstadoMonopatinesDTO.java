@@ -11,7 +11,10 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReporteEstadoMonopatinesDTO implements Serializable {
-    private int aptos_para_uso;
-    private int en_mantenimiento;
+    private long aptos_para_uso;
+    private long en_mantenimiento;
+
+
+
 
 }

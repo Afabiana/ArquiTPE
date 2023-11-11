@@ -7,9 +7,11 @@ import lombok.Setter;
 @Entity
 public class Estacion{
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_estacion;
     @Getter @Setter
     @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_ubicacion")
     private Ubicacion ubicacion;
 
     public Estacion() {

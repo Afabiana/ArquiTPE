@@ -16,7 +16,7 @@ public interface EstacionRepository extends JpaRepository<Estacion, Long> {
             FROM
                 Estacion e
             ORDER BY
-                ST_Distance(e.ubicacion, :latitud, :longitud) DESC
+                ST_Distance(POINT(e.ubicacion.latitud, e.ubicacion.longitud), POINT(:latitud, :longitud)) ASC
             LIMIT 5
         """
     )

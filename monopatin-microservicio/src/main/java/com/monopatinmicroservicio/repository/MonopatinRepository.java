@@ -12,29 +12,29 @@ import java.util.List;
 @Repository
 public interface MonopatinRepository extends JpaRepository<Monopatin, Long> {
 
-    @Query("""
-        SELECT
-            new com.monopatinmicroservicio.service.DTO.ReporteEstadoMonopatinesDTO(
-            (SELECT COUNT(m) FROM Monopatin m WHERE m.disponibilidad = FALSE),
-            (SELECT COUNT(m) FROM Monopatin m WHERE m.disponibilidad = TRUE)
+    @Query(
+        """
+            SELECT new com.monopatinmicroservicio.service.DTO.ReporteEstadoMonopatinesDTO(
+                (SELECT COUNT(m) FROM Monopatin m WHERE m.disponibilidad = TRUE),
+                (SELECT COUNT(m) FROM Monopatin m WHERE m.disponibilidad = FALSE)
             )
-            FROM Monopatin m
         """
     )
-    List<ReporteEstadoMonopatinesDTO> traerReporteEstadoMonopatines();
+    ReporteEstadoMonopatinesDTO traerReporteEstadoMonopatines();
 
     @Query(value =
         """
             SELECT
-                m
+                m,
+                ST_Distance(POINT(:longitud, :latitud), POINT(m.ubicacion.longitud, m.ubicacion.latitud)) AS distancia
             FROM
                 Monopatin m
             WHERE
                 m.disponibilidad = TRUE
-            AND
-                ST_Distance(:latitud, :longitud, m.ubicacion.latitud, m.ubicacion.longitud) < :limite
+            ORDER BY
+                ST_Distance_Sphere(POINT(:longitud, :latitud), POINT(m.ubicacion.longitud, m.ubicacion.latitud)) ASC
         """
     )
-    List<Monopatin> traerMonopatinesCercanos(double latitud, double longitud, double limite);
+    List<Object[]> traerMonopatinesCercanos(double latitud, double longitud);
 
 }
