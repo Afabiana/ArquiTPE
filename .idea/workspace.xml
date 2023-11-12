@@ -5,9 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="534013d9-62e6-4301-a2a5-bd63fd87e580" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/controller/MonopatinController.java" beforeDir="false" afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/controller/MonopatinController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/service/MonopatinService.java" beforeDir="false" afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/service/MonopatinService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/controller/ViajeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/controller/ViajeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/repository/MonopatinViajeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/repository/MonopatinViajeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/service/ViajeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/service/ViajeService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/usuario-microservicio/src/main/java/com/usuariomicroservicio/controller/CuentaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/usuario-microservicio/src/main/java/com/usuariomicroservicio/controller/CuentaController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/usuario-microservicio/target/classes/com/usuariomicroservicio/controller/CuentaController.class" beforeDir="false" afterPath="$PROJECT_DIR$/usuario-microservicio/target/classes/com/usuariomicroservicio/controller/CuentaController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/usuario-microservicio/target/classes/com/usuariomicroservicio/controller/UsuarioController.class" beforeDir="false" afterPath="$PROJECT_DIR$/usuario-microservicio/target/classes/com/usuariomicroservicio/controller/UsuarioController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/usuario-microservicio/target/classes/com/usuariomicroservicio/model/Cuenta.class" beforeDir="false" afterPath="$PROJECT_DIR$/usuario-microservicio/target/classes/com/usuariomicroservicio/model/Cuenta.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/usuario-microservicio/target/classes/com/usuariomicroservicio/service/CuentaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/usuario-microservicio/target/classes/com/usuariomicroservicio/service/CuentaService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/usuario-microservicio/target/classes/com/usuariomicroservicio/service/UsuarioService.class" beforeDir="false" afterPath="$PROJECT_DIR$/usuario-microservicio/target/classes/com/usuariomicroservicio/service/UsuarioService.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,29 +52,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "Merging main",
-    "jdk.selected.JAVA_MODULE": "openjdk-21 (2)",
-    "last_opened_file_path": "C:/Users/DELL/Music/ArquiTPE - copia/usuario-microservicio",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "service.view.auto.scroll.from.source": "true",
-    "spring.configuration.checksum": "3f09f6092864e0e3ffda0a4edbe3ec4e",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;openjdk-21 (2)&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/DELL/Music/ArquiTPE - copia/usuario-microservicio&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;service.view.auto.scroll.from.source&quot;: &quot;true&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;3f09f6092864e0e3ffda0a4edbe3ec4e&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.monopatinmicroservicio.service" />
@@ -82,7 +90,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.AdminMicroservicioApplication">
+  <component name="RunManager" selected="Spring Boot.MonopatinMicroservicioApplication">
     <configuration name="AdminMicroservicioApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <module name="admin-microservicio" />
@@ -128,6 +136,8 @@
       <workItem from="1699739568719" duration="1448000" />
       <workItem from="1699741047758" duration="66000" />
       <workItem from="1699742801846" duration="142000" />
+      <workItem from="1699762260408" duration="5886000" />
+      <workItem from="1699810848143" duration="340000" />
     </task>
     <task id="LOCAL-00001" summary="admin microservice creado">
       <option name="closed" value="true" />
@@ -145,7 +155,15 @@
       <option name="project" value="LOCAL" />
       <updated>1699738773692</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="merge de rama fabi a rama main">
+      <option name="closed" value="true" />
+      <created>1699746205968</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1699746205968</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -155,6 +173,7 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="admin microservice creado" />
     <MESSAGE value="refactory cuenta/usuario" />
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="merge de rama fabi a rama main" />
+    <option name="LAST_COMMIT_MESSAGE" value="merge de rama fabi a rama main" />
   </component>
 </project>

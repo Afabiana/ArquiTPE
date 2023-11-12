@@ -96,4 +96,16 @@ public interface MonopatinViajeRepository extends JpaRepository<MonopatinViaje, 
             mv.id.id_viaje.id_viaje = :id_viaje
     """)
     Monopatin findByViaje(Long id_viaje);
+
+    @Query(
+        """
+            SELECT
+                mv
+            FROM
+                MonopatinViaje mv
+            WHERE
+                mv.id.id_viaje.id_viaje = :id
+        """
+    )
+    MonopatinViaje findMonopatinViajeByViaje(Long id);
 }

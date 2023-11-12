@@ -73,13 +73,13 @@ public class ViajeController{
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarViaje(@PathVariable Long id) {
         if (viajeService.eliminarViaje(id)) {
-            return ResponseEntity.ok(viajeService.eliminarViaje(id));
+            return ResponseEntity.ok("Viaje eliminado");
         }
         return ResponseEntity.status(404).body("No se encontro el viaje");
     }
 
     @PutMapping("tarifa/{id}")
-    //podria recibir directamente un tarifaDTORequest?
+    //quizas deberia pasar el valor de la tarifa en un JSON
     public ResponseEntity<?> actualizarTarifa(@PathVariable Long id, @RequestBody double tarifa) {
         Double tarifaActualizada = viajeService.actualizarTarifa(id, tarifa);
         if (tarifaActualizada != null) {
@@ -90,9 +90,9 @@ public class ViajeController{
 
     /*endpoint de ejemplo: http://localhost:55255/viaje/tarifa FUNCIONA
     body de ejemplo:{
-        "nombre": "normal",
-        "precio": 10.0,
-        "fecha_de_alta": "2023-11-05",
+        "nombre": "estudiante",
+        "valor_por_segundo": 8.50,
+        "fecha_de_alta": "2023-11-12",
         "habilitada": true
     }
      */
@@ -105,13 +105,14 @@ public class ViajeController{
         return ResponseEntity.status(404).body("Tarifa no agregada");
     }
 
-    @GetMapping("/totalFacturado?anio={anio}&mesDesde={mesDesde}&mesHasta={mesHasta}")
+    //endpoint de ejemplo: http://localhost:55255/viaje/totalFacturado?anio=2023&mesDesde=6&mesHasta=12
+    @GetMapping("/totalFacturado")
     public ResponseEntity<?> traerTotalFacturado(@RequestParam int anio, @RequestParam int mesDesde,
                                                @RequestParam int mesHasta) {
         if (viajeService.traerTotalFacturado(anio, mesDesde, mesHasta) != null) {
             return ResponseEntity.ok(viajeService.traerTotalFacturado(anio, mesDesde, mesHasta));
         }
-        return ResponseEntity.status(404).body("No se encontro el viaje");
+        return ResponseEntity.status(404).body("Algo salio mal");
     }
 
 

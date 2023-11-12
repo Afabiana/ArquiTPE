@@ -20,6 +20,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -80,7 +81,8 @@ public class ViajeService {
         if (viaje.getHora_fin() == null) {
             //con delay pordia hacer que se cobre cada 1 segundo
             return webClient.put()
-                    .uri("http://localhost:8081/cuenta/descontar/" + viaje.getId_cuenta() + "?monto=" + monto)
+                    .uri("http://localhost:8081/cuenta/descontar/" + viaje.getId_cuenta())
+                    .bodyValue(monto) // Enviar monto en el cuerpo
                     .retrieve()
                     .toBodilessEntity()
                     .flatMap(response -> {
@@ -151,9 +153,16 @@ public class ViajeService {
 
     @Transactional
     public boolean eliminarViaje(Long id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-            return true;
+        Viaje viaje = repository.findById(id).orElse(null);
+        if (viaje!=null) {
+            System.out.println("existe");
+            MonopatinViaje mv = this.monopatinViajeRepository.findMonopatinViajeByViaje(id);
+            if (mv != null) {
+                System.out.println("existe todo");
+                this.monopatinViajeRepository.delete(mv);
+                repository.deleteById(id);
+                return true;
+            }
         }
         return false;
     }
@@ -172,7 +181,7 @@ public class ViajeService {
         Flux<Long> contador = Flux.interval(Duration.ofMinutes(15)) //va a esperar 15 min
                 .take(1)  //nomas se va a ejecutar 1 vez
                 .doOnNext(t -> {
-                    // llamar a reanudarViaje
+                    System.out.println("Terminando pausa excedida");
                     viajeEnPausa.setTarifaExtra(tarifaExtra);
                     this.repository.save(viajeEnPausa);
                     reanudarViaje(id);
@@ -210,7 +219,7 @@ public class ViajeService {
     @Transactional
     public boolean terminarViaje(Long id) {
         Optional<Viaje> opcional = this.repository.findById(id);
-        if (!opcional.isPresent()) {
+        if (!opcional.isPresent()||opcional.get().getHora_fin()!=null) {
             return false;
         }
         //finalizo el tiempo de viaje
