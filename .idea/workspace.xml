@@ -4,18 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="534013d9-62e6-4301-a2a5-bd63fd87e580" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="534013d9-62e6-4301-a2a5-bd63fd87e580" name="Changes" comment="merge de rama fabi a rama main">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/controller/ViajeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/controller/ViajeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/repository/MonopatinViajeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/repository/MonopatinViajeRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/service/ViajeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/service/ViajeService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/controller/MonopatinController.java" beforeDir="false" afterPath="$PROJECT_DIR$/monopatin-microservicio/src/main/java/com/monopatinmicroservicio/controller/MonopatinController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/usuario-microservicio/src/main/java/com/usuariomicroservicio/controller/CuentaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/usuario-microservicio/src/main/java/com/usuariomicroservicio/controller/CuentaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/usuario-microservicio/target/classes/com/usuariomicroservicio/controller/CuentaController.class" beforeDir="false" afterPath="$PROJECT_DIR$/usuario-microservicio/target/classes/com/usuariomicroservicio/controller/CuentaController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/usuario-microservicio/target/classes/com/usuariomicroservicio/controller/UsuarioController.class" beforeDir="false" afterPath="$PROJECT_DIR$/usuario-microservicio/target/classes/com/usuariomicroservicio/controller/UsuarioController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/usuario-microservicio/target/classes/com/usuariomicroservicio/model/Cuenta.class" beforeDir="false" afterPath="$PROJECT_DIR$/usuario-microservicio/target/classes/com/usuariomicroservicio/model/Cuenta.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/usuario-microservicio/target/classes/com/usuariomicroservicio/service/CuentaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/usuario-microservicio/target/classes/com/usuariomicroservicio/service/CuentaService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/usuario-microservicio/target/classes/com/usuariomicroservicio/service/UsuarioService.class" beforeDir="false" afterPath="$PROJECT_DIR$/usuario-microservicio/target/classes/com/usuariomicroservicio/service/UsuarioService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/usuario-microservicio/src/main/java/com/usuariomicroservicio/controller/UsuarioController.java" beforeDir="false" afterPath="$PROJECT_DIR$/usuario-microservicio/src/main/java/com/usuariomicroservicio/controller/UsuarioController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/usuario-microservicio/src/main/java/com/usuariomicroservicio/model/Cuenta.java" beforeDir="false" afterPath="$PROJECT_DIR$/usuario-microservicio/src/main/java/com/usuariomicroservicio/model/Cuenta.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/usuario-microservicio/src/main/java/com/usuariomicroservicio/repository/UsuarioCuentaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/usuario-microservicio/src/main/java/com/usuariomicroservicio/repository/UsuarioCuentaRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/usuario-microservicio/src/main/java/com/usuariomicroservicio/service/CuentaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/usuario-microservicio/src/main/java/com/usuariomicroservicio/service/CuentaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/usuario-microservicio/src/main/java/com/usuariomicroservicio/service/DTO/UsuarioDTORequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/usuario-microservicio/src/main/java/com/usuariomicroservicio/service/DTO/UsuarioDTORequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/usuario-microservicio/src/main/java/com/usuariomicroservicio/service/UsuarioService.java" beforeDir="false" afterPath="$PROJECT_DIR$/usuario-microservicio/src/main/java/com/usuariomicroservicio/service/UsuarioService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +88,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.MonopatinMicroservicioApplication">
+  <component name="RunManager" selected="Spring Boot.UsuarioMicroservicioApplication">
     <configuration name="AdminMicroservicioApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <module name="admin-microservicio" />
@@ -137,7 +135,8 @@
       <workItem from="1699741047758" duration="66000" />
       <workItem from="1699742801846" duration="142000" />
       <workItem from="1699762260408" duration="5886000" />
-      <workItem from="1699810848143" duration="340000" />
+      <workItem from="1699810848143" duration="1153000" />
+      <workItem from="1699845722639" duration="2844000" />
     </task>
     <task id="LOCAL-00001" summary="admin microservice creado">
       <option name="closed" value="true" />

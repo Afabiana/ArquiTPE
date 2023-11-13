@@ -24,7 +24,6 @@ public class CuentaController {
         return new ResponseEntity<>(cuentasDTO, HttpStatus.OK);
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<?> traerCuentaPorId(@PathVariable Long id) {
         CuentaDTOResponse cuentaDTO = cuentaService.traerPorId(id);
@@ -56,26 +55,6 @@ public class CuentaController {
                 .body("algo salio mal");
     }
 
-    // Habilitar/ Deshabilitar cuenta
-    @PutMapping("/habilitar/{id}")
-    public ResponseEntity<?> habilitarCuenta(@PathVariable Long id) {
-        boolean isHabilitada = cuentaService.cambiarEstadoCuenta(id,true);
-        if (isHabilitada){
-            return ResponseEntity.ok().body("Se modifico con exito");
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body("No se encontró el usuario con el usuario con id "+id);
-    }
-
-    @PutMapping("/deshabilitar/{id}")
-    public ResponseEntity<?> deshabilitarCuenta(@PathVariable Long id) {
-        boolean isHabilitada = cuentaService.cambiarEstadoCuenta(id,false);
-        if (isHabilitada){
-            return ResponseEntity.ok().body("Se modifico con exito");
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body("No se encontró el usuario con el usuario con id "+id);
-    }
     // Saldo
     @GetMapping("/saldo/{idCuenta}")
     public ResponseEntity<?> traerSaldo(@PathVariable Long idCuenta){

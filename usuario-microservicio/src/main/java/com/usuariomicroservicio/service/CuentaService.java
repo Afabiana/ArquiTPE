@@ -51,30 +51,11 @@ public class CuentaService {
         }
     }
 
-    // habilitar/desahbilitar cuenta
-    public boolean cambiarEstadoCuenta(Long id, boolean isHabilitada) {
-        try{
-            Optional<Cuenta> optionalCuenta = repository.findById(id);
-            if (optionalCuenta.isPresent()) {
-                Cuenta cuenta = optionalCuenta.get();
-                cuenta.setHabilitada(isHabilitada);
-                repository.save(cuenta);
-                return true;
-            }
-            return false;
-        }catch (Error err){
-            return false;
-        }
-    }
 
     // Saldo
-    public Double traerSaldo(Long id) {
+    public Double traerSaldo(Long id){
         Optional<Cuenta> optionalCuenta = repository.findById(id);
-        if (optionalCuenta.isPresent()) {
-            return usuarioCuentaRepository.getSaldoByUserId(id);
-        }
-        return null;
-        // TODO- check sql
+        return optionalCuenta.map(Cuenta::getSaldo).orElse(null);
     }
 
     public Double cargarSaldo(Long id, double monto) {

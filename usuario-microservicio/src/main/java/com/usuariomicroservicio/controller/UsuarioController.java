@@ -36,13 +36,22 @@ public class UsuarioController {
     public ResponseEntity<?> traerUsuarios() {
         Stream<UsuarioDTOResponse> usuarios = usuarioService.traerTodo();
 
-        if (usuarios.findAny().isPresent()){
+        if (usuarios != null){
             return ResponseEntity.ok(usuarios);
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("algo salio mal");
     }
 
+    /**
+     * ejemplo json:{
+     *     "nombre": "nombre",
+     *     "apellido": "apellido",
+     *     "nro_celular": "nro_celular",
+     *     "email": "email",
+     *     "habilitada": true
+     * }
+     */
     @PostMapping("")
     public ResponseEntity<?> agregarUsuario(@RequestBody UsuarioDTORequest usuario) {
         try{
@@ -63,6 +72,16 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("no se pudo eliminar al usuario con id "+id);
         }
+    }
+
+    @PutMapping("/habilitar/{id}")
+    public ResponseEntity<?> habilitarCuenta(@PathVariable Long id) {
+        return usuarioService.cambiarEstadoCuenta(id, true);
+    }
+
+    @PutMapping("/deshabilitar/{id}")
+    public ResponseEntity<?> deshabilitarCuenta(@PathVariable Long id) {
+        return usuarioService.cambiarEstadoCuenta(id, false);
     }
 
 }

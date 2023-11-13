@@ -13,7 +13,6 @@ public class Cuenta {
     private Long id_cuenta;
     private LocalDate fecha_de_alta;
     private Double saldo;
-    private Boolean habilitada;
 
 
 

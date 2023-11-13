@@ -18,8 +18,7 @@ import java.util.stream.Stream;
 public class MonopatinController {
     private MonopatinService monopatinService;
 
-    //TODO: Falta crear el metodo empezarViaje. Estaria bueno hacerlo con webclient
-    //TODO: falta manejar lo de las pausas. Con un contador estaria.
+    //TODO: Faltan detalles. Crear DTOs request y response
 
     public MonopatinController(MonopatinService monopatinService) {
         this.monopatinService = monopatinService;
