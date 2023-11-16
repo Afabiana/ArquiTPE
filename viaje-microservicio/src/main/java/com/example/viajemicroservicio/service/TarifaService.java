@@ -24,11 +24,6 @@ public class TarifaService {
     }
 
     @Transactional
-    public TarifaDTOResponse crearTarifa(TarifaDTORequest tarifaDTORequest) {
-        return new TarifaDTOResponse(tarifaRepository.save(new Tarifa(tarifaDTORequest)));
-    }
-
-    @Transactional
     public TarifaDTOResponse actualizarTarifa(Long id, TarifaDTORequest tarifaDTORequest) {
         return tarifaRepository.findById(id).map(tarifa -> {
             tarifa.setNombre(tarifaDTORequest.getNombre());
