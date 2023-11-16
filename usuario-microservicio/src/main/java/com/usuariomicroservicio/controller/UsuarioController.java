@@ -1,16 +1,13 @@
 package com.usuariomicroservicio.controller;
 
-import com.usuariomicroservicio.model.Usuario;
-import com.usuariomicroservicio.service.DTO.UsuarioDTORequest;
+
+import com.usuariomicroservicio.service.DTO.usuario.request.UsuarioDTORequest;
 import com.usuariomicroservicio.service.UsuarioService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.usuariomicroservicio.service.DTO.UsuarioDTORequest;
-import com.usuariomicroservicio.service.DTO.UsuarioDTOResponse;
+import com.usuariomicroservicio.service.DTO.usuario.response.UsuarioDTOResponse;
 
-import java.util.Optional;
 import java.util.stream.Stream;
 
 @RestController("UsuarioController")
@@ -55,7 +52,7 @@ public class UsuarioController {
     @PostMapping("")
     public ResponseEntity<?> agregarUsuario(@RequestBody UsuarioDTORequest usuario) {
         try{
-            Usuario addedUsuario = usuarioService.guardarUsuario(usuario);
+            UsuarioDTOResponse addedUsuario = usuarioService.guardarUsuario(usuario);
             return ResponseEntity.ok(addedUsuario);
         } catch (Error err){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -68,20 +65,26 @@ public class UsuarioController {
         boolean isEliminado = usuarioService.eliminarUsuario(id);
         if (isEliminado){
             return ResponseEntity.ok("usuario eliminado con éxito");
-        }else{
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("no se pudo eliminar al usuario con id "+id);
         }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("no se pudo eliminar al usuario con id "+id);
     }
 
     @PutMapping("/habilitar/{id}")
     public ResponseEntity<?> habilitarCuenta(@PathVariable Long id) {
-        return usuarioService.cambiarEstadoCuenta(id, true);
+       boolean isHabilitado = usuarioService.cambiarEstadoCuenta(id, true);
+         if (isHabilitado)
+              return ResponseEntity.ok("usuario habilitado con éxito");
+         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                 .body("no se pudo habilitar al usuario con id "+id);
     }
 
     @PutMapping("/deshabilitar/{id}")
-    public ResponseEntity<?> deshabilitarCuenta(@PathVariable Long id) {
-        return usuarioService.cambiarEstadoCuenta(id, false);
+    public ResponseEntity<?> deshabilitarCuenta(@PathVariable Long id){
+        boolean isDeshabilitado = usuarioService.cambiarEstadoCuenta(id, false);
+        if (isDeshabilitado)
+            return ResponseEntity.ok("usuario deshabilitado con éxito");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("no se pudo deshabilitar al usuario con id " + id);
     }
-
 }

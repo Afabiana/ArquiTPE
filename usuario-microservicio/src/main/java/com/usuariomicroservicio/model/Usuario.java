@@ -1,8 +1,9 @@
 package com.usuariomicroservicio.model;
 
-import com.usuariomicroservicio.service.DTO.UsuarioDTORequest;
+import com.usuariomicroservicio.service.DTO.usuario.request.UsuarioDTORequest;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,7 +17,12 @@ public class Usuario {
     private String email;
     private Boolean habilitada;
     @ManyToMany
+    @JoinColumn(name = "rol")
     private List<Rol> roles;
+
+    @ManyToMany(mappedBy = "usuarios")
+    @JoinColumn(name = "id_cuenta")
+    private List<Cuenta> cuentas;
 
     public Usuario() {
     }
@@ -78,5 +84,13 @@ public class Usuario {
 
     public void setHabilitada(Boolean habilitada) {
         this.habilitada = habilitada;
+    }
+
+    public List<Rol> getRoles() {
+        return new ArrayList<>(this.roles);
+    }
+
+    public void addRoles(Rol rol) {
+        this.roles.add(rol);
     }
 }

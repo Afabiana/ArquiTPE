@@ -2,12 +2,9 @@ package com.usuariomicroservicio.service;
 
 import com.usuariomicroservicio.model.Cuenta;
 import com.usuariomicroservicio.repository.CuentaRepository;
-import com.usuariomicroservicio.repository.UsuarioCuentaRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import com.usuariomicroservicio.service.DTO.CuentaDTOResponse;
-import com.usuariomicroservicio.service.DTO.CuentaDTORequest;
+import com.usuariomicroservicio.service.DTO.cuenta.response.CuentaDTOResponse;
+import com.usuariomicroservicio.service.DTO.cuenta.request.CuentaDTORequest;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -16,12 +13,10 @@ import java.util.stream.Stream;
 @Service("CuentaService")
 public class CuentaService {
     private CuentaRepository repository;
-    private UsuarioCuentaRepository usuarioCuentaRepository;
 
 
-    public CuentaService(CuentaRepository repository, UsuarioCuentaRepository usuarioCuentaRepository) {
+    public CuentaService(CuentaRepository repository) {
         this.repository = repository;
-        this.usuarioCuentaRepository = usuarioCuentaRepository;
     }
 
 
@@ -32,8 +27,8 @@ public class CuentaService {
     public CuentaDTOResponse traerPorId(Long id) {
         Optional<Cuenta> optionalCuenta = repository.findById(id);
         if (optionalCuenta.isPresent()) {
-            CuentaDTOResponse cuentaDTOResponse = new CuentaDTOResponse(optionalCuenta.get());
-            return cuentaDTOResponse;
+            CuentaDTOResponse cuentaResponse = new CuentaDTOResponse(optionalCuenta.get());
+            return cuentaResponse;
         }
         return null;
     }

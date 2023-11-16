@@ -1,20 +1,22 @@
 package com.usuariomicroservicio.model;
 
-import com.usuariomicroservicio.service.DTO.CuentaDTORequest;
+import com.usuariomicroservicio.service.DTO.cuenta.request.CuentaDTORequest;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
+
 @Entity
-@Data
 public class Cuenta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_cuenta;
     private LocalDate fecha_de_alta;
     private Double saldo;
-
-
+    @ManyToMany(mappedBy = "cuentas")
+    @JoinColumn(name = "id_usuario")
+    private List<Usuario> usuarios;
 
     public Cuenta() {
     }

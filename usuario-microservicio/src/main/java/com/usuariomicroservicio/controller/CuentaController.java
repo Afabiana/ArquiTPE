@@ -1,8 +1,8 @@
 package com.usuariomicroservicio.controller;
 
 import com.usuariomicroservicio.service.CuentaService;
-import com.usuariomicroservicio.service.DTO.CuentaDTORequest;
-import com.usuariomicroservicio.service.DTO.CuentaDTOResponse;
+import com.usuariomicroservicio.service.DTO.cuenta.request.CuentaDTORequest;
+import com.usuariomicroservicio.service.DTO.cuenta.response.CuentaDTOResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

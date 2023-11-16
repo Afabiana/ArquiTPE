@@ -1,6 +1,7 @@
 package com.monopatinmicroservicio.model;
 
-import com.monopatinmicroservicio.service.DTO.MonopatinDTO;
+import com.monopatinmicroservicio.model.enums.EstadoMonopatin;
+import com.monopatinmicroservicio.service.DTO.monopatin.MonopatinDTORequest;
 import jakarta.persistence.*;
 import lombok.ToString;
 
@@ -15,16 +16,24 @@ public class Monopatin {
     @JoinColumn(name = "ubicacion_id")
     private Ubicacion ubicacion;
     @Column
-    private Boolean disponibilidad; //este flag me va a ayudar a saber si esta estacionado
+    @Enumerated(EnumType.STRING)
+    private EstadoMonopatin estado; //este flag me va a ayudar a saber si esta estacionado
+    private Long kilometraje;
 
-    public Monopatin(Ubicacion ubicacion, boolean disponibilidad) {
+
+    public Monopatin(Ubicacion ubicacion, EstadoMonopatin estado) {
         this.ubicacion = ubicacion;
-        this.disponibilidad = disponibilidad;
+        this.estado = estado;
     }
 
-    public Monopatin(MonopatinDTO monopatin) {
+    /*
+    @TODO: crear dto para request y para response
+     */
+    public Monopatin(MonopatinDTORequest monopatin) {
         this.ubicacion = new Ubicacion(monopatin.getLatitud(), monopatin.getLongitud());
-        this.disponibilidad = monopatin.getDisponibilidad();
+        this.estado = EstadoMonopatin.valueOf(monopatin.getEstado());
+        this.kilometraje = monopatin.getKilometraje();
+
     }
 
     public Monopatin() {
@@ -43,14 +52,27 @@ public class Monopatin {
     }
 
     public boolean isDisponible() {
-        return disponibilidad;
+        return this.estado == EstadoMonopatin.APAGADO;
     }
 
-    public void setDisponibilidad (boolean disponible) {
-        this.disponibilidad = disponible;
+    public void setDisponibilidad (EstadoMonopatin estado) {
+        this.estado = estado;
     }
 
     public boolean estaEstacionado(Ubicacion ubi){
         return this.ubicacion.equals(ubi);
+    }
+
+
+    public EstadoMonopatin getEstado() {
+        return estado;
+    }
+
+    public Long getKilometraje() {
+        return kilometraje;
+    }
+
+    public void actualizarKilometraje(Long kilometraje) {
+        this.kilometraje += kilometraje;
     }
 }

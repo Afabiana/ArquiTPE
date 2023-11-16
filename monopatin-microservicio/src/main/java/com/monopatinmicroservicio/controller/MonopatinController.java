@@ -1,14 +1,13 @@
 package com.monopatinmicroservicio.controller;
 
 import com.monopatinmicroservicio.model.Ubicacion;
-import com.monopatinmicroservicio.service.DTO.EstacionDTO;
-import com.monopatinmicroservicio.service.DTO.MonopatinDTO;
+import com.monopatinmicroservicio.model.enums.EstadoMonopatin;
+import com.monopatinmicroservicio.service.DTO.monopatin.MonopatinDTORequest;
+import com.monopatinmicroservicio.service.DTO.monopatin.MonopatinDTOResponse;
 import com.monopatinmicroservicio.service.MonopatinService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -18,15 +17,15 @@ import java.util.stream.Stream;
 public class MonopatinController {
     private MonopatinService monopatinService;
 
-    //TODO: Faltan detalles. Crear DTOs request y response
 
     public MonopatinController(MonopatinService monopatinService) {
         this.monopatinService = monopatinService;
     }
 
+    //GETTERS
     @GetMapping("/{id}")
     public ResponseEntity<?> traerMonopatin(@PathVariable Long id) {
-        Optional<MonopatinDTO> monopatin = monopatinService.traerMonopatin(id);
+        Optional<MonopatinDTOResponse> monopatin = monopatinService.traerMonopatin(id);
         if (monopatin.isPresent()) {
             return ResponseEntity.ok(monopatin);
         }
@@ -36,7 +35,7 @@ public class MonopatinController {
 
     @GetMapping
     public ResponseEntity<?> traerMonopatines() {
-        Stream<MonopatinDTO> monopatinStream = monopatinService.traerMonopatines();
+        Stream<MonopatinDTOResponse> monopatinStream = monopatinService.traerMonopatines();
         if (monopatinStream.findAny().isPresent()){
             return ResponseEntity.ok(monopatinStream);
         }
@@ -44,6 +43,51 @@ public class MonopatinController {
                 .body("algo salio mal");
     }
 
+    @GetMapping("/cercanos")
+    public ResponseEntity<?> traerMonopatinesCercanos(@RequestParam(name = "latitud") double latitud,
+                                                      @RequestParam(name = "longitud") double longitud) {
+        // TODO - deberia venir por body
+        return ResponseEntity.ok(monopatinService.traerMonopatinesCercanos(latitud, longitud));
+    }
+
+    //GETTERS - REPORTES
+    @GetMapping("/kilometraje/total")
+    public ResponseEntity<?> traerReporteKilometrajeTotal() {
+        return ResponseEntity.ok(monopatinService.traerReporteKilometraje()); //esto es a proposito, porque la consulta es la misma
+    }
+
+    @GetMapping("/reporteEstadoMonopatines")
+    public ResponseEntity<?> traerReporteEstadoMonopatines() {
+        return ResponseEntity.ok(monopatinService.traerReporteEstadoMonopatines());
+    }
+
+    //UNICO POST
+    @PostMapping
+    public ResponseEntity<?> agregarMonopatin(@RequestBody MonopatinDTORequest monopatinDTO) {
+        MonopatinDTOResponse monopatin = monopatinService.agregarMonopatin(monopatinDTO);
+        if (monopatin != null) {
+            return ResponseEntity.ok(monopatin);
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("algo salio mal");
+    }
+
+    //PUTTERS
+    @PutMapping("/mantenimiento/{id}")
+    public ResponseEntity<?> mandarAMantenimiento(@PathVariable Long id) {
+        if (monopatinService.cambiarDisponibilidad(id, EstadoMonopatin.EN_MANTENIMIENTO)) {
+            return ResponseEntity.ok().body("Monopatin mandado a mantenimiento");
+        }
+        return ResponseEntity.status(404).body("No se encontro el monopatin");
+    }
+
+    @PutMapping("/habilitar/{id}")
+    public ResponseEntity<?> sacarDeMantenimiento(@PathVariable Long id) {
+        if (monopatinService.cambiarDisponibilidad(id, EstadoMonopatin.APAGADO)) {
+            return ResponseEntity.ok().body("Monopatin habilitado");
+        }
+        return ResponseEntity.status(404).body("No se encontro el monopatin");
+    }
 
     @PutMapping("/{id}/ubicacion")
     public ResponseEntity<?> actualizarUbicacion(@PathVariable Long id, @RequestBody Ubicacion ubicacion) {
@@ -53,21 +97,6 @@ public class MonopatinController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontro el monopatin");
     }
 
-    @GetMapping("/cercanos")
-    public ResponseEntity<?> traerMonopatinesCercanos(@RequestParam(name = "latitud") double latitud,
-                                                    @RequestParam(name = "longitud") double longitud) {
-        // TODO - deberia venir por body
-        return ResponseEntity.ok(monopatinService.traerMonopatinesCercanos(latitud, longitud));
-    }
-
-    @GetMapping("/estaciones")
-    public ResponseEntity<?> traerEstacionesMasCercanas(@RequestParam(name = "latitud") double latitud,
-                                                     @RequestParam(name = "longitud") double longitud){
-        return ResponseEntity.ok(monopatinService.traerEstacionesMasCercanas(latitud, longitud));
-    }
-
-    //estos metodos requieren permisos de admin o mantenimiento
-
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarMonopatin(@PathVariable Long id) {
         if (monopatinService.eliminarMonopatin(id)) {
@@ -76,83 +105,21 @@ public class MonopatinController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontro el monopatin");
     }
 
-    //endpoint de ejemplo: http://localhost:55255/monopatin
-
     /**
      * {
      *     "latitud": -37.33333,
      *     "longitud": 59.1111,
-     *     "disponibilidad": false
+     *     "estado": "APAGADO",
+     *     "kilometraje": 10
+     *
      * }
      */
-    @PostMapping
-    public ResponseEntity<?> agregarMonopatin(@RequestBody MonopatinDTO monopatinDTO) {
-        MonopatinDTO monopatin = monopatinService.agregarMonopatin(monopatinDTO);
-        if (monopatin != null) {
-            return ResponseEntity.ok(monopatin);
-        }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("algo salio mal");
-    }
 
-    @GetMapping("/monopatinesMasUsados/minCantidadViajes={minCantidadViajes}&anio={anio}")
-    public ResponseEntity<?> traerMonopatinesMasUsados(@PathVariable int minCantidadViajes, @PathVariable int anio) {
-        // TODO - params por query
-        return ResponseEntity.ok(monopatinService.traerMonopatinesMasUsados(minCantidadViajes, anio));
-    }
 
-    @GetMapping("/reporteEstadoMonopatines")
-    public ResponseEntity<?> traerReporteEstadoMonopatines() {
-        return ResponseEntity.ok(monopatinService.traerReporteEstadoMonopatines());
-    }
 
-    @PostMapping("/estacion")
-    public ResponseEntity<?> guardarEstacion(@RequestBody Ubicacion ubicacion) {
-        EstacionDTO estacion = monopatinService.guardarEstacion(ubicacion);
-        if (estacion != null) {
-            return ResponseEntity.ok(estacion);
-        }
-        return ResponseEntity.status(404).body("No se encontro el monopatin");
-    }
 
-    @DeleteMapping("/estacion/{id}")
-    public ResponseEntity<?> eliminarEstacion(@PathVariable Long id) {
-        if (monopatinService.eliminarEstacion(id)) {
-            return ResponseEntity.ok().body("Estacion eliminada");
-        }
-        return ResponseEntity.status(404).body("No se encontro el monopatin");
-    }
 
-    @PutMapping("/mantenimiento/{id}")
-    public ResponseEntity<?> mandarAMantenimiento(@PathVariable Long id) {
-        if (monopatinService.cambiarDisponibilidad(id, false)) {
-            return ResponseEntity.ok().body("Monopatin mandado a mantenimiento");
-        }
-        return ResponseEntity.status(404).body("No se encontro el monopatin");
-    }
 
-    @PutMapping("/habilitar/{id}")
-    public ResponseEntity<?> sacarDeMantenimiento(@PathVariable Long id) {
-        if (monopatinService.cambiarDisponibilidad(id, true)) {
-            return ResponseEntity.ok().body("Monopatin habilitado");
-        }
-        return ResponseEntity.status(404).body("No se encontro el monopatin");
-    }
-
-    @GetMapping("/kilometraje/pausas")
-    public ResponseEntity<?> traerReporteKilometraje() {
-        return ResponseEntity.ok(monopatinService.traerReporteKilometrajeConPausas());
-    }
-
-    @GetMapping("/kilometraje/sin-pausas")
-    public ResponseEntity<?> traerReporteKilometrajeSinPausas() {
-        return ResponseEntity.ok(monopatinService.traerReporteKilometrajeSinPausas());
-    }
-
-    @GetMapping("/kilometraje/total")
-    public ResponseEntity<?> traerReporteKilometrajeTotal() {
-        return ResponseEntity.ok(monopatinService.traerReporteKilometrajeSinPausas()); //esto es a proposito, porque la consulta es la misma
-    }
 
 
 }

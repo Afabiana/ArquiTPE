@@ -7,9 +7,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="admin-microservicio" />
         <module name="usuario-microservicio" />
         <module name="monopatin-microservicio" />
+        <module name="viaje-microservicio" />
       </profile>
     </annotationProcessing>
   </component>
@@ -17,6 +17,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="monopatin-microservicio" options="-parameters" />
       <module name="usuario-microservicio" options="-parameters" />
+      <module name="viaje-microservicio" options="-parameters" />
     </option>
   </component>
 </project>

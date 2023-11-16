@@ -1,14 +1,18 @@
 package com.monopatinmicroservicio.service;
 
 import com.monopatinmicroservicio.model.*;
+import com.monopatinmicroservicio.model.enums.EstadoMonopatin;
 import com.monopatinmicroservicio.repository.EstacionRepository;
 import com.monopatinmicroservicio.repository.MonopatinRepository;
-import com.monopatinmicroservicio.repository.MonopatinViajeRepository;
 import com.monopatinmicroservicio.service.DTO.*;
-import jakarta.transaction.Transactional;
+import com.monopatinmicroservicio.service.DTO.monopatin.MonopatinDTORequest;
+import com.monopatinmicroservicio.service.DTO.monopatin.MonopatinDTOResponse;
+import com.monopatinmicroservicio.service.DTO.monopatin.MonopatinMasUsadoDTO;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -17,27 +21,30 @@ import java.util.stream.Stream;
 public class MonopatinService {
 
     private final MonopatinRepository repository;
-    private final EstacionRepository estacionRepository;
-    private final MonopatinViajeRepository monopatinViajeRepository;
+    private WebClient webClient;
 
-    public MonopatinService(MonopatinRepository repository, EstacionRepository estacionRepository, MonopatinViajeRepository monopatinViajeRepository) {
+    /*
+    * TODO: Al empezar el viaje en el otro microservicio, podria pegarle a este servicio
+    *  para que se actualice cada segundo la ubicacion y
+    *  se vaya aumentando su kilometraje
+    */
+
+    public MonopatinService(MonopatinRepository repository) {
         this.repository = repository;
-        this.monopatinViajeRepository = monopatinViajeRepository;
-        this.estacionRepository = estacionRepository;
+        this.webClient = WebClient.create("http://localhost:8080");
     }
     // CRUD
     @Transactional
-    public Optional<MonopatinDTO> traerMonopatin(Long id){
+    public Optional<MonopatinDTOResponse> traerMonopatin(Long id){
         Optional<Monopatin> monopatin = repository.findById(id);
-        if (monopatin.isPresent()){
-            return monopatin.map(MonopatinDTO::new);
-        }
-        return null;
+        return monopatin.map(MonopatinDTOResponse::new);
+
+
     }
 
     @Transactional
-    public Stream<MonopatinDTO> traerMonopatines() {
-        return repository.findAll().stream().map(MonopatinDTO::new);
+    public Stream<MonopatinDTOResponse> traerMonopatines() {
+        return repository.findAll().stream().map(MonopatinDTOResponse::new);
     }
 
     @Transactional
@@ -54,18 +61,18 @@ public class MonopatinService {
     }
 
     @Transactional
-    public MonopatinDTO agregarMonopatin(MonopatinDTO monopatin){
+    public MonopatinDTOResponse agregarMonopatin(MonopatinDTORequest monopatin){
         Monopatin savedMonopatin = repository.save(new Monopatin(monopatin));
-        return new MonopatinDTO(savedMonopatin);
+        return new MonopatinDTOResponse(savedMonopatin);
     }
 
     // OTRAS
     @Transactional
-    public boolean cambiarDisponibilidad(Long id, boolean disponible) {
+    public boolean cambiarDisponibilidad(Long id, EstadoMonopatin disponibilidad) {
         Monopatin monopatin = repository.findById(id).orElse(null);
 
         if (monopatin != null) {
-            monopatin.setDisponibilidad(disponible);
+            monopatin.setDisponibilidad(disponibilidad);
             repository.save(monopatin);
             return true;
         } else {
@@ -88,80 +95,34 @@ public class MonopatinService {
 
 
     @Transactional
-    public List<MonopatinDTO> traerMonopatinesCercanos(double latitud, double longitud) {
-        List<MonopatinDTO> monopatines = repository.traerMonopatinesCercanos(latitud, longitud)
+    public List<MonopatinDTOResponse> traerMonopatinesCercanos(double latitud, double longitud) {
+        return repository.traerMonopatinesCercanos(latitud, longitud)
                 .stream()
-                .map(m->{
-                    Monopatin monopatin = (Monopatin) m[0];
-                    Double distancia = (Double) m[1];
-                    System.out.println("monopatin: " + monopatin + " distancia: " + distancia);
-                    return new MonopatinDTO(monopatin);
-                })
+                .map(MonopatinDTOResponse::new)
                 .toList();
-        return monopatines;
     }
 
 
+    //tiene sentido pegarle al otro microservicio si solo traigo datos pero no hago mas que mostrarlos?
     @Transactional
-    public Optional<List<MonopatinMasUsadoDTO>> traerMonopatinesMasUsados(int minCantidadViajes, int anio) {
-        List<MonopatinMasUsadoDTO> masUsados = this.monopatinViajeRepository.traerMonopatinesMasUsados(minCantidadViajes, anio);
-
-        if (!masUsados.isEmpty()) {
-            return Optional.of(masUsados);
-        }
-
-        return Optional.empty();
+    public Flux<MonopatinMasUsadoDTO> traerMonopatinesMasUsados(int minCantidadViajes, int anio) {
+        return webClient.get()
+                .uri("/viaje/monopatinesMasUsados/minCantidadViajes={minCantidadViajes}&anio={anio}", minCantidadViajes, anio)
+                .retrieve()
+                .bodyToFlux(MonopatinMasUsadoDTO.class);
     }
 
 
     @Transactional
     public ReporteEstadoMonopatinesDTO traerReporteEstadoMonopatines() {
-        return repository.traerReporteEstadoMonopatines();
+        return this.repository.traerReporteEstadoMonopatines();
     }
 
     @Transactional
-    public EstacionDTO guardarEstacion(Ubicacion ubicacion) {
-        Estacion estacion = new Estacion(ubicacion);
-        return new EstacionDTO(estacionRepository.save(estacion));
+    public List<ReporteKilometrajeDTO> traerReporteKilometraje() {
+        return this.repository.traerReporteKilometraje();
     }
 
-    @Transactional
-    public boolean eliminarEstacion(Long id) {
-        Optional<Estacion> optionalEstacion = estacionRepository.findById(id);
-        if (optionalEstacion.isPresent()) {
-            Estacion estacion = optionalEstacion.get();
-            estacionRepository.delete(estacion);
-            return true;
-        }
-        return false;
-    }
 
-    @Transactional
-    public List<ReporteKilometrajeDTO> traerReporteKilometrajeConPausas() {
-        return monopatinViajeRepository.traerReporteKilometrajeConPausas().stream().map(m -> {
-            ReporteKilometrajeDTO reporteKilometrajeDTO = new ReporteKilometrajeDTO();
-            reporteKilometrajeDTO.setKilometros_recorridos((Double) m[0]);
-            reporteKilometrajeDTO.setMinutos_uso((BigDecimal) m[1]);
-            reporteKilometrajeDTO.setCantidad_viajes(((Long) m[2]));
-            return reporteKilometrajeDTO;
-        }).toList();
-    }
 
-    @Transactional
-    public List<ReporteKilometrajeDTO> traerReporteKilometrajeSinPausas() {
-        return monopatinViajeRepository.traerReporteKilometrajeSinPausas().stream().map(
-                m->{
-                    ReporteKilometrajeDTO reporteKilometrajeDTO = new ReporteKilometrajeDTO();
-                    reporteKilometrajeDTO.setKilometros_recorridos((Double) m[0]);
-                    reporteKilometrajeDTO.setMinutos_uso((BigDecimal) m[1]);
-                    reporteKilometrajeDTO.setCantidad_viajes(((Long) m[2]));
-                    return reporteKilometrajeDTO;
-                }
-        ).toList();
-    }
-
-    @Transactional
-    public List<EstacionDTO> traerEstacionesMasCercanas(double latitud, double longitud) {
-        return estacionRepository.traerEstacionesMasCercanas(latitud, longitud);
-    }
 }

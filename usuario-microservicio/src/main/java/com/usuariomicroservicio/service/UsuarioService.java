@@ -1,13 +1,10 @@
 package com.usuariomicroservicio.service;
 
-import com.usuariomicroservicio.repository.UsuarioCuentaRepository;
 import com.usuariomicroservicio.repository.UsuarioRepository;
 import com.usuariomicroservicio.model.Usuario;
-import com.usuariomicroservicio.service.DTO.UsuarioDTORequest;
-import com.usuariomicroservicio.service.DTO.UsuarioDTOResponse;
+import com.usuariomicroservicio.service.DTO.usuario.request.UsuarioDTORequest;
+import com.usuariomicroservicio.service.DTO.usuario.response.UsuarioDTOResponse;
 import jakarta.transaction.Transactional;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,11 +13,9 @@ import java.util.stream.Stream;
 @Service
 public class UsuarioService {
     private UsuarioRepository repository;
-    private UsuarioCuentaRepository usuarioCuentaRepository;
 
-    public UsuarioService(UsuarioRepository repository, UsuarioCuentaRepository usuarioCuentaRepository) {
+    public UsuarioService(UsuarioRepository repository) {
         this.repository = repository;
-        this.usuarioCuentaRepository = usuarioCuentaRepository;
     }
 
     @Transactional
@@ -36,8 +31,9 @@ public class UsuarioService {
     }
 
     @Transactional
-    public Usuario guardarUsuario(UsuarioDTORequest usuario) {
-        return repository.save(new Usuario(usuario));
+    public UsuarioDTOResponse guardarUsuario(UsuarioDTORequest usuario) {
+        Usuario usuarioNuevo= repository.save(new Usuario(usuario));
+        return new UsuarioDTOResponse(usuarioNuevo);
     }
 
     @Transactional
@@ -51,14 +47,14 @@ public class UsuarioService {
     }
 
     @Transactional
-    public ResponseEntity<?> cambiarEstadoCuenta(Long id, boolean isHabilitada) {
+    public boolean cambiarEstadoCuenta(Long id, boolean isHabilitada) {
         Optional<Usuario> optionalUsuario = repository.findById(id);
         if (optionalUsuario.isPresent()) {
             Usuario usuario = optionalUsuario.get();
             usuario.setHabilitada(isHabilitada);
             repository.save(usuario);
-            return ResponseEntity.ok().body("Se modifico con exito");
+            return true;
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró el usuario con el ID proporcionado");
+        return false;
     }
 }

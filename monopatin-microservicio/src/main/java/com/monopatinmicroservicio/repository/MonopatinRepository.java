@@ -1,8 +1,8 @@
 package com.monopatinmicroservicio.repository;
 
 import com.monopatinmicroservicio.model.Monopatin;
-import com.monopatinmicroservicio.service.DTO.MonopatinDTO;
 import com.monopatinmicroservicio.service.DTO.ReporteEstadoMonopatinesDTO;
+import com.monopatinmicroservicio.service.DTO.ReporteKilometrajeDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -15,8 +15,8 @@ public interface MonopatinRepository extends JpaRepository<Monopatin, Long> {
     @Query(
         """
             SELECT new com.monopatinmicroservicio.service.DTO.ReporteEstadoMonopatinesDTO(
-                (SELECT COUNT(m) FROM Monopatin m WHERE m.disponibilidad = TRUE),
-                (SELECT COUNT(m) FROM Monopatin m WHERE m.disponibilidad = FALSE)
+                (SELECT COUNT(m) FROM Monopatin m WHERE m.estado = 'PRENDIDO' OR m.estado = 'APAGADO'),
+                (SELECT COUNT(m) FROM Monopatin m WHERE m.estado = 'EN_MANTENIMIENTO')
             )
         """
     )
@@ -25,16 +25,29 @@ public interface MonopatinRepository extends JpaRepository<Monopatin, Long> {
     @Query(value =
         """
             SELECT
-                m,
-                ST_Distance(POINT(:longitud, :latitud), POINT(m.ubicacion.longitud, m.ubicacion.latitud)) AS distancia
+                m
             FROM
                 Monopatin m
             WHERE
-                m.disponibilidad = TRUE
+                m.estado = 'APAGADO'
             ORDER BY
                 ST_Distance_Sphere(POINT(:longitud, :latitud), POINT(m.ubicacion.longitud, m.ubicacion.latitud)) ASC
         """
     )
-    List<Object[]> traerMonopatinesCercanos(double latitud, double longitud);
+    List<Monopatin> traerMonopatinesCercanos(double latitud, double longitud);
 
+    @Query(
+        """
+            SELECT
+                new com.monopatinmicroservicio.service.DTO.ReporteKilometrajeDTO(
+                    m.id_monopatin,
+                    m.kilometraje
+                )
+            FROM
+                Monopatin m
+            ORDER BY
+                m.kilometraje DESC
+        """
+    )
+    List<ReporteKilometrajeDTO> traerReporteKilometraje();
 }
