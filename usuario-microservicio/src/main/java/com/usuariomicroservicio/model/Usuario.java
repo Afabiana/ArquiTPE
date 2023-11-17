@@ -20,8 +20,8 @@ public class Usuario {
     @JoinColumn(name = "rol")
     private List<Rol> roles;
 
-    @ManyToMany(mappedBy = "usuarios")
-    @JoinColumn(name = "id_cuenta")
+    @ManyToMany
+    @JoinColumn(name = "fk_cuenta")
     private List<Cuenta> cuentas;
 
     public Usuario() {

@@ -1,6 +1,5 @@
 package com.monopatinmicroservicio.model;
 
-import com.monopatinmicroservicio.model.enums.EstadoMonopatin;
 import com.monopatinmicroservicio.service.DTO.monopatin.MonopatinDTORequest;
 import jakarta.persistence.*;
 import lombok.ToString;
@@ -15,15 +14,31 @@ public class Monopatin {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL) //cascade para que inserte ubicacion tambien
     @JoinColumn(name = "ubicacion_id")
     private Ubicacion ubicacion;
-    @Column
-    @Enumerated(EnumType.STRING)
-    private EstadoMonopatin estado; //este flag me va a ayudar a saber si esta estacionado
+    private boolean prendido; //este flag me va a ayudar a saber si esta estacionado
+    private boolean enMantenimiento;
     private Long kilometraje;
 
+    public boolean isPrendido() {
+        return prendido;
+    }
 
-    public Monopatin(Ubicacion ubicacion, EstadoMonopatin estado) {
+    public void setPrendido(boolean prendido) {
+        this.prendido = prendido;
+    }
+
+    public boolean isEnMantenimiento() {
+        return enMantenimiento;
+    }
+
+    public void setEnMantenimiento(boolean enMantenimiento) {
+        this.enMantenimiento = enMantenimiento;
+    }
+
+    public Monopatin(Ubicacion ubicacion, Long kilometraje) {
         this.ubicacion = ubicacion;
-        this.estado = estado;
+        this.prendido = false;
+        this.enMantenimiento = false;
+        this.kilometraje = kilometraje;
     }
 
     /*
@@ -31,7 +46,8 @@ public class Monopatin {
      */
     public Monopatin(MonopatinDTORequest monopatin) {
         this.ubicacion = new Ubicacion(monopatin.getLatitud(), monopatin.getLongitud());
-        this.estado = EstadoMonopatin.valueOf(monopatin.getEstado());
+        this.prendido = false;
+        this.enMantenimiento = false;
         this.kilometraje = monopatin.getKilometraje();
 
     }
@@ -52,21 +68,14 @@ public class Monopatin {
     }
 
     public boolean isDisponible() {
-        return this.estado == EstadoMonopatin.APAGADO;
+        return this.enMantenimiento == false && this.prendido == false;
     }
 
-    public void setDisponibilidad (EstadoMonopatin estado) {
-        this.estado = estado;
-    }
 
     public boolean estaEstacionado(Ubicacion ubi){
         return this.ubicacion.equals(ubi);
     }
 
-
-    public EstadoMonopatin getEstado() {
-        return estado;
-    }
 
     public Long getKilometraje() {
         return kilometraje;

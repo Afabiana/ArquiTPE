@@ -15,8 +15,8 @@ public interface MonopatinRepository extends JpaRepository<Monopatin, Long> {
     @Query(
         """
             SELECT new com.monopatinmicroservicio.service.DTO.ReporteEstadoMonopatinesDTO(
-                (SELECT COUNT(m) FROM Monopatin m WHERE m.estado = 'PRENDIDO' OR m.estado = 'APAGADO'),
-                (SELECT COUNT(m) FROM Monopatin m WHERE m.estado = 'EN_MANTENIMIENTO')
+                (SELECT COUNT(m) FROM Monopatin m WHERE m.enMantenimiento = false),
+                (SELECT COUNT(m) FROM Monopatin m WHERE m.enMantenimiento = true)
             )
         """
     )
@@ -29,7 +29,8 @@ public interface MonopatinRepository extends JpaRepository<Monopatin, Long> {
             FROM
                 Monopatin m
             WHERE
-                m.estado = 'APAGADO'
+                m.enMantenimiento = false
+                AND m.prendido = false
             ORDER BY
                 ST_Distance_Sphere(POINT(:longitud, :latitud), POINT(m.ubicacion.longitud, m.ubicacion.latitud)) ASC
         """

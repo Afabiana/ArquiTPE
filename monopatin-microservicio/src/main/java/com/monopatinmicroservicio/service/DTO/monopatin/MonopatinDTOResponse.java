@@ -10,14 +10,14 @@ public class MonopatinDTOResponse implements Serializable {
     private Long id_monopatin;
     private double latitud;
     private double longitud;
-    private String estado;
+    private boolean estado;
 
 
     public MonopatinDTOResponse(Monopatin m){
         this.id_monopatin = m.getId_monopatin();
         this.latitud = m.getUbicacion().getLatitud();
         this.longitud = m.getUbicacion().getLongitud();
-        this.estado = m.getEstado().toString();
+        this.estado = m.isPrendido();
     }
 
 }

@@ -1,8 +1,6 @@
 package com.monopatinmicroservicio.service;
 
 import com.monopatinmicroservicio.model.*;
-import com.monopatinmicroservicio.model.enums.EstadoMonopatin;
-import com.monopatinmicroservicio.repository.EstacionRepository;
 import com.monopatinmicroservicio.repository.MonopatinRepository;
 import com.monopatinmicroservicio.service.DTO.*;
 import com.monopatinmicroservicio.service.DTO.monopatin.MonopatinDTORequest;
@@ -17,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-@Service("monopatinService")
+@Service
 public class MonopatinService {
 
     private final MonopatinRepository repository;
@@ -34,7 +32,7 @@ public class MonopatinService {
         this.webClient = WebClient.create("http://localhost:8080");
     }
     // CRUD
-    @Transactional
+    @Transactional(readOnly = true)
     public Optional<MonopatinDTOResponse> traerMonopatin(Long id){
         Optional<Monopatin> monopatin = repository.findById(id);
         return monopatin.map(MonopatinDTOResponse::new);
@@ -42,9 +40,10 @@ public class MonopatinService {
 
     }
 
-    @Transactional
-    public Stream<MonopatinDTOResponse> traerMonopatines() {
-        return repository.findAll().stream().map(MonopatinDTOResponse::new);
+    @Transactional(readOnly = true)
+    public List<MonopatinDTOResponse> traerMonopatines() {
+       List<Monopatin> monopatines = repository.findAll();
+       return monopatines.stream().map(MonopatinDTOResponse::new).toList();
     }
 
     @Transactional
@@ -68,11 +67,11 @@ public class MonopatinService {
 
     // OTRAS
     @Transactional
-    public boolean cambiarDisponibilidad(Long id, EstadoMonopatin disponibilidad) {
+    public boolean cambiarDisponibilidad(Long id, boolean disponibilidad) {
         Monopatin monopatin = repository.findById(id).orElse(null);
 
         if (monopatin != null) {
-            monopatin.setDisponibilidad(disponibilidad);
+            monopatin.setEnMantenimiento(disponibilidad);
             repository.save(monopatin);
             return true;
         } else {

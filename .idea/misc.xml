@@ -10,6 +10,10 @@
         <option value="$PROJECT_DIR$/monopatin-microservicio/pom.xml" />
         <option value="$PROJECT_DIR$/admin-microservicio/pom.xml" />
         <option value="$PROJECT_DIR$/viaje-microservicio/pom.xml" />
+        <option value="$PROJECT_DIR$/../Desktop/nacho-seguridad/gateway-microservicio/pom.xml" />
+        <option value="$PROJECT_DIR$/../Desktop/nacho-seguridad/authenticaction/pom.xml" />
+        <option value="$PROJECT_DIR$/../Desktop/gateway-microservicio/pom.xml" />
+        <option value="$PROJECT_DIR$/../Desktop/authenticaction/pom.xml" />
       </list>
     </option>
   </component>

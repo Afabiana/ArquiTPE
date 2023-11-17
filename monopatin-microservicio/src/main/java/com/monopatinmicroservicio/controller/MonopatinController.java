@@ -1,7 +1,6 @@
 package com.monopatinmicroservicio.controller;
 
 import com.monopatinmicroservicio.model.Ubicacion;
-import com.monopatinmicroservicio.model.enums.EstadoMonopatin;
 import com.monopatinmicroservicio.service.DTO.monopatin.MonopatinDTORequest;
 import com.monopatinmicroservicio.service.DTO.monopatin.MonopatinDTOResponse;
 import com.monopatinmicroservicio.service.MonopatinService;
@@ -9,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -33,10 +33,10 @@ public class MonopatinController {
                 .body("No se encontro el monopatin con id "+id);
     }
 
-    @GetMapping
+    @GetMapping("")
     public ResponseEntity<?> traerMonopatines() {
-        Stream<MonopatinDTOResponse> monopatinStream = monopatinService.traerMonopatines();
-        if (monopatinStream.findAny().isPresent()){
+        List<MonopatinDTOResponse> monopatinStream = monopatinService.traerMonopatines();
+        if (!monopatinStream.isEmpty()){
             return ResponseEntity.ok(monopatinStream);
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -75,7 +75,7 @@ public class MonopatinController {
     //PUTTERS
     @PutMapping("/mantenimiento/{id}")
     public ResponseEntity<?> mandarAMantenimiento(@PathVariable Long id) {
-        if (monopatinService.cambiarDisponibilidad(id, EstadoMonopatin.EN_MANTENIMIENTO)) {
+        if (monopatinService.cambiarDisponibilidad(id, true)) {
             return ResponseEntity.ok().body("Monopatin mandado a mantenimiento");
         }
         return ResponseEntity.status(404).body("No se encontro el monopatin");
@@ -83,7 +83,7 @@ public class MonopatinController {
 
     @PutMapping("/habilitar/{id}")
     public ResponseEntity<?> sacarDeMantenimiento(@PathVariable Long id) {
-        if (monopatinService.cambiarDisponibilidad(id, EstadoMonopatin.APAGADO)) {
+        if (monopatinService.cambiarDisponibilidad(id, false)) {
             return ResponseEntity.ok().body("Monopatin habilitado");
         }
         return ResponseEntity.status(404).body("No se encontro el monopatin");
@@ -114,13 +114,6 @@ public class MonopatinController {
      *
      * }
      */
-
-
-
-
-
-
-
 
 }
 

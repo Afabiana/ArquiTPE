@@ -11,12 +11,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MonopatinDTORequest implements Serializable {
-    private Long id_monopatin;
     private double latitud;
     private double longitud;
-    private String estado;
     private Long kilometraje;
-
 
 
 

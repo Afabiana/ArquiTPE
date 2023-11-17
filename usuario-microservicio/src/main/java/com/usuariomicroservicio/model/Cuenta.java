@@ -15,7 +15,6 @@ public class Cuenta {
     private LocalDate fecha_de_alta;
     private Double saldo;
     @ManyToMany(mappedBy = "cuentas")
-    @JoinColumn(name = "id_usuario")
     private List<Usuario> usuarios;
 
     public Cuenta() {
